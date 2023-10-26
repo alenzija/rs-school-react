@@ -1,6 +1,5 @@
 import StapiService from '../../services/swapi-service';
-import ErrorMessage from '../error-message';
-import Spinner from '../spinner';
+import PlanetsList from '../planets-list';
 
 import './app.scss';
 
@@ -8,8 +7,7 @@ function App() {
   StapiService.getAllPlanets().then(console.log);
   return (
     <>
-      <Spinner />
-      <ErrorMessage />
+      <PlanetsList />
     </>
   );
 }

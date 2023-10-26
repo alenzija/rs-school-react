@@ -1,12 +1,11 @@
 import { Component } from 'react';
-
 import Planet from '../../types/planet';
 
-class PlanetsItem extends Component<Planet> {
+class PlanetsItem extends Component<Readonly<Planet>> {
   render() {
     const { name, population, climate, terrain } = this.props;
     return (
-      <div key={name}>
+      <div>
         <div>Name {name}</div>
         <div>Population {population}</div>
         <div>Climate {climate}</div>
