@@ -11,30 +11,60 @@ import './planets-list.scss';
 
 type PlanetsListState = Readonly<{
   planets: Planet[];
-  loading: boolean;
   error: boolean;
 }>;
 
-class PlanetsList extends Component<Readonly<object>, PlanetsListState> {
-  state: PlanetsListState = {
-    planets: [],
-    loading: true,
-    error: false,
-  };
+type PlanetsListProps = Readonly<{
+  onChangeLoading: (value: boolean) => void;
+  loading: boolean;
+  searchPhrase: string;
+}>;
+
+class PlanetsList extends Component<PlanetsListProps, PlanetsListState> {
+  constructor(props: PlanetsListProps) {
+    super(props);
+    this.state = {
+      planets: [],
+      error: false,
+    };
+  }
+
+  updatePlanets(): void {
+    const { onChangeLoading, searchPhrase } = this.props;
+    if (searchPhrase === '') {
+      SwapiService.getAllPlanets()
+        .then((data) => {
+          this.setState({ planets: data });
+        })
+        .catch(() => {
+          this.setState({ error: true });
+        })
+        .finally(() => onChangeLoading(false));
+    } else {
+      SwapiService.searchPlanetByName(searchPhrase)
+        .then((data) => {
+          this.setState({ planets: data });
+        })
+        .catch(() => {
+          this.setState({ error: true });
+        })
+        .finally(() => onChangeLoading(false));
+    }
+  }
 
   componentDidMount(): void {
-    SwapiService.getAllPlanets()
-      .then((data) => {
-        this.setState({ planets: data });
-      })
-      .catch(() => {
-        this.setState({ error: true });
-      })
-      .finally(() => this.setState({ loading: false }));
+    this.updatePlanets();
+  }
+
+  componentDidUpdate(prevProps: PlanetsListProps): void {
+    if (prevProps.searchPhrase !== this.props.searchPhrase) {
+      this.updatePlanets();
+    }
   }
 
   render() {
-    const { planets, loading, error } = this.state;
+    const { planets, error } = this.state;
+    const { loading } = this.props;
     const spinner = loading ? <Spinner /> : null;
     const errorMessage = error ? <ErrorMessage /> : null;
     const content = !(error || loading) ? <View planets={planets} /> : null;

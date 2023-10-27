@@ -1,29 +1,30 @@
 import { Component, createRef } from 'react';
 
-type SearchFormState = Readonly<{ serachPhrase: string }>;
+type SearchFormProps = Readonly<{
+  loading: boolean;
+  searchPhrase: string;
+  onChangeSearchPhrase: (str: string) => void;
+  onChangeLoading: (value: boolean) => void;
+}>;
 
-class SearchForm extends Component<Readonly<object>, SearchFormState> {
-  state: SearchFormState = {
-    serachPhrase: localStorage.getItem('searchPhrase') || '',
-  };
-
+class SearchForm extends Component<SearchFormProps> {
   inputRef = createRef<HTMLInputElement>();
 
   private updateSearchPhrase(): void {
-    const newSearchPhrase = this.inputRef.current?.value;
-    if (!newSearchPhrase) {
+    const { searchPhrase, onChangeSearchPhrase, onChangeLoading } = this.props;
+    const newSearchPhrase = this.inputRef.current?.value.trim() || '';
+    if (newSearchPhrase === searchPhrase) {
       return;
     }
-    localStorage.setItem('searchPhrase', newSearchPhrase);
-    this.setState({
-      serachPhrase: newSearchPhrase,
-    });
+    onChangeSearchPhrase(newSearchPhrase.trim());
+    onChangeLoading(true);
   }
 
   render() {
+    const { searchPhrase } = this.props;
     return (
       <div>
-        <input ref={this.inputRef} defaultValue={this.state.serachPhrase} />
+        <input ref={this.inputRef} defaultValue={searchPhrase} />
         <button onClick={() => this.updateSearchPhrase()}>Search</button>
       </div>
     );
