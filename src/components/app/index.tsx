@@ -1,12 +1,12 @@
-import StapiService from '../../services/swapi-service';
 import PlanetsList from '../planets-list';
+import SearchForm from '../search-form';
 
 import './app.scss';
 
 function App() {
-  StapiService.getAllPlanets().then(console.log);
   return (
     <div className="container">
+      <SearchForm />
       <PlanetsList />
     </div>
   );
