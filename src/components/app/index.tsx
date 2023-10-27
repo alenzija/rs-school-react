@@ -6,9 +6,9 @@ import './app.scss';
 function App() {
   StapiService.getAllPlanets().then(console.log);
   return (
-    <>
+    <div className="container">
       <PlanetsList />
-    </>
+    </div>
   );
 }
 

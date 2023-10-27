@@ -1,6 +1,8 @@
 import Planet from '../types/planet';
 
 export default class SwapiService {
+  private static baseURL = 'https://swapi.dev/api';
+
   private static transfromPlanetsData(
     data: Record<string, string>[]
   ): Planet[] {
@@ -13,7 +15,7 @@ export default class SwapiService {
   }
 
   public static async getAllPlanets(page: number = 1): Promise<Planet[]> {
-    const res = await fetch(`https://swapi.dev/api/planets/?page=${page}`);
+    const res = await fetch(`${this.baseURL}/planets/?page=${page}`);
     if (!res.ok) {
       throw Error('Something went wrong!');
     }
