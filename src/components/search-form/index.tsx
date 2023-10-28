@@ -10,7 +10,7 @@ type SearchFormProps = Readonly<{
 class SearchForm extends Component<SearchFormProps> {
   inputRef = createRef<HTMLInputElement>();
 
-  private updateSearchPhrase(): void {
+  private updateSearchPhrase = (): void => {
     const { searchPhrase, onChangeSearchPhrase, onChangeLoading } = this.props;
     const newSearchPhrase = this.inputRef.current?.value.trim() || '';
     if (newSearchPhrase === searchPhrase) {
@@ -18,15 +18,17 @@ class SearchForm extends Component<SearchFormProps> {
     }
     onChangeSearchPhrase(newSearchPhrase.trim());
     onChangeLoading(true);
-  }
+  };
 
   render() {
-    const { searchPhrase } = this.props;
+    const { searchPhrase, loading } = this.props;
     return (
-      <div>
+      <form onSubmit={(e) => e.preventDefault()}>
         <input ref={this.inputRef} defaultValue={searchPhrase} />
-        <button onClick={() => this.updateSearchPhrase()}>Search</button>
-      </div>
+        <button disabled={loading} onClick={this.updateSearchPhrase}>
+          Search
+        </button>
+      </form>
     );
   }
 }

@@ -3,6 +3,7 @@ import PlanetsList from '../planets-list';
 import SearchForm from '../search-form';
 
 import './app.scss';
+import ThrowErrorButton from '../throw-error-button';
 
 class App extends Component {
   state = {
@@ -33,6 +34,7 @@ class App extends Component {
           onChangeSearchPhrase={this.changeSearchPhrase}
           onChangeLoading={this.changeLoading}
         />
+        <ThrowErrorButton />
         <PlanetsList
           loading={loading}
           searchPhrase={searchPhrase}
