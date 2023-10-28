@@ -1,7 +1,7 @@
 import Planet from '../types/planet';
 
 export default class SwapiService {
-  private static baseURL = 'https://swapi.dev/apu';
+  private static baseURL = 'https://swapi.dev/api';
 
   private static transfromPlanetsData(
     data: Record<string, string>[]

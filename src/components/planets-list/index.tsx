@@ -5,9 +5,9 @@ import PlanetsItem from '../planets-item';
 import Spinner from '../spinner';
 
 import SwapiService from '../../services/swapi-service';
-import ErrorMessage from '../error-message';
 
 import './planets-list.scss';
+import ErrorMessage from '../error-message';
 
 type PlanetsListState = Readonly<{
   planets: Planet[];
@@ -36,18 +36,14 @@ class PlanetsList extends Component<PlanetsListProps, PlanetsListState> {
         .then((data) => {
           this.setState({ planets: data });
         })
-        .catch(() => {
-          this.setState({ error: true });
-        })
+        .catch(() => this.setState({ error: true }))
         .finally(() => onChangeLoading(false));
     } else {
       SwapiService.searchPlanetByName(searchPhrase)
         .then((data) => {
           this.setState({ planets: data });
         })
-        .catch(() => {
-          this.setState({ error: true });
-        })
+        .catch(() => this.setState({ error: true }))
         .finally(() => onChangeLoading(false));
     }
   }
@@ -71,8 +67,8 @@ class PlanetsList extends Component<PlanetsListProps, PlanetsListState> {
 
     return (
       <div className="planets">
-        {spinner}
         {errorMessage}
+        {spinner}
         {content}
       </div>
     );
@@ -86,6 +82,9 @@ class View extends Component<{ planets: Planet[] }> {
 
   render() {
     const { planets } = this.props;
+    if (planets.length === 0) {
+      return <div>No planets</div>;
+    }
     return (
       <>
         {planets.map((planet) => (
