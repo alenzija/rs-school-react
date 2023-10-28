@@ -1,5 +1,7 @@
 import { Component, createRef } from 'react';
 
+import './seacrh-form.scss';
+
 type SearchFormProps = Readonly<{
   loading: boolean;
   searchPhrase: string;
@@ -23,8 +25,13 @@ class SearchForm extends Component<SearchFormProps> {
   render() {
     const { searchPhrase, loading } = this.props;
     return (
-      <form onSubmit={(e) => e.preventDefault()}>
-        <input ref={this.inputRef} defaultValue={searchPhrase} />
+      <form className="search-form" onSubmit={(e) => e.preventDefault()}>
+        <input
+          className="search-form__input"
+          ref={this.inputRef}
+          defaultValue={searchPhrase}
+          placeholder="Enter a planet name"
+        />
         <button disabled={loading} onClick={this.updateSearchPhrase}>
           Search
         </button>

@@ -1,5 +1,7 @@
 import { Component } from 'react';
 
+import './throw-error-button.scss';
+
 class ThrowErrorButton extends Component {
   state = {
     throwError: false,
@@ -16,7 +18,11 @@ class ThrowErrorButton extends Component {
     if (throwError) {
       throw Error('check ErrorBoundary');
     }
-    return <button onClick={this.handleError}>Throw Error</button>;
+    return (
+      <button className="throw-error-button" onClick={this.handleError}>
+        Throw Error
+      </button>
+    );
   }
 }
 

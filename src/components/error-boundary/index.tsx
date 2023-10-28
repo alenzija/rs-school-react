@@ -18,7 +18,7 @@ class ErrorBoundary extends Component<Readonly<{ children: ReactNode }>> {
     //   in ErrorBoundary (created by App)
     //   in div (created by App)
     //   in App
-    console.log('ErrorBoundary did catch', error);
+    console.log('ErrorBoundary did catch', error.message);
     //logErrorToMyService(error, info.componentStack);
   }
 
