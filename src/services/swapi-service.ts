@@ -2,7 +2,6 @@ import Planet from '../types/planet';
 
 export default class SwapiService {
   private static baseURL = 'https://swapi.dev/api';
-
   private static transfromPlanetsData(
     data: Record<string, string>[]
   ): Planet[] {
@@ -23,8 +22,13 @@ export default class SwapiService {
     return this.transfromPlanetsData(data.results);
   }
 
-  public static async searchPlanetByName(name: string): Promise<Planet[]> {
-    const res = await fetch(`${this.baseURL}/planets/?search=${name}`);
+  public static async searchPlanetByName(
+    name: string,
+    page: number = 1
+  ): Promise<Planet[]> {
+    const res = await fetch(
+      `${this.baseURL}/planets/?search=${name}&page=${page}`
+    );
     if (!res.ok) {
       throw Error('Something went wrong!');
     }

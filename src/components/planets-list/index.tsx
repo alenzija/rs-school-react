@@ -21,13 +21,10 @@ type PlanetsListProps = Readonly<{
 }>;
 
 class PlanetsList extends Component<PlanetsListProps, PlanetsListState> {
-  constructor(props: PlanetsListProps) {
-    super(props);
-    this.state = {
-      planets: [],
-      error: false,
-    };
-  }
+  state = {
+    planets: [],
+    error: false,
+  };
 
   updatePlanets(): void {
     const { onChangeLoading, searchPhrase } = this.props;
