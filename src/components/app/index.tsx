@@ -1,9 +1,9 @@
 import { ReactNode, useState } from 'react';
-import PlanetsList from '../planets-list';
-import SearchForm from '../search-form';
+
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import './app.scss';
-import ThrowErrorButton from '../throw-error-button';
+import Layout from '../layout';
 
 const App = (): ReactNode => {
   const [searchPhrase, setSearchPhrase] = useState(
@@ -21,20 +21,20 @@ const App = (): ReactNode => {
   };
 
   return (
-    <div className="container">
-      <SearchForm
-        searchPhrase={searchPhrase}
-        loading={loading}
-        onChangeSearchPhrase={changeSearchPhrase}
-        onChangeLoading={changeLoading}
-      />
-      <ThrowErrorButton />
-      <PlanetsList
-        loading={loading}
-        searchPhrase={searchPhrase}
-        onChangeLoading={changeLoading}
-      />
-    </div>
+    <Routes>
+      <Route path="/" element={<Navigate to="/pages/1" replace />} />
+      <Route
+        path="/pages/:page"
+        element={
+          <Layout
+            searchPhrase={searchPhrase}
+            loading={loading}
+            onChangeSearchPhrase={changeSearchPhrase}
+            onChangeLoading={changeLoading}
+          />
+        }
+      ></Route>
+    </Routes>
   );
 };
 

@@ -13,7 +13,7 @@ export default class SwapiService {
     }));
   }
 
-  public static async getAllPlanets(page: number = 1): Promise<Planet[]> {
+  public static async getAllPlanets(page: number): Promise<Planet[]> {
     const res = await fetch(`${this.baseURL}/planets/?page=${page}`);
     if (!res.ok) {
       throw Error('Something went wrong!');
@@ -24,7 +24,7 @@ export default class SwapiService {
 
   public static async searchPlanetByName(
     name: string,
-    page: number = 1
+    page: number
   ): Promise<Planet[]> {
     const res = await fetch(
       `${this.baseURL}/planets/?search=${name}&page=${page}`

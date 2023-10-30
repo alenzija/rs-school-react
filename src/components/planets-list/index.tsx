@@ -13,31 +13,32 @@ type PlanetsListProps = Readonly<{
   onChangeLoading: (value: boolean) => void;
   loading: boolean;
   searchPhrase: string;
+  page: number;
 }>;
 
 const PlanetsList = (props: PlanetsListProps): ReactNode => {
   const [planets, setPlanets] = useState<Planet[]>([]);
   const [error, setError] = useState(false);
 
-  const { onChangeLoading, searchPhrase, loading } = props;
+  const { onChangeLoading, searchPhrase, loading, page } = props;
 
   const updatePlanets = useCallback((): void => {
     if (searchPhrase === '') {
-      SwapiService.getAllPlanets()
+      SwapiService.getAllPlanets(page)
         .then((data) => {
           setPlanets(data);
         })
         .catch(() => setError(true))
         .finally(() => onChangeLoading(false));
     } else {
-      SwapiService.searchPlanetByName(searchPhrase)
+      SwapiService.searchPlanetByName(searchPhrase, page)
         .then((data) => {
           setPlanets(data);
         })
         .catch(() => setError(true))
         .finally(() => onChangeLoading(false));
     }
-  }, [onChangeLoading, searchPhrase]);
+  }, [onChangeLoading, searchPhrase, page]);
 
   useEffect(() => {
     updatePlanets();
