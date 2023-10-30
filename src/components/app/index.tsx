@@ -1,48 +1,41 @@
-import { Component } from 'react';
+import { ReactNode, useState } from 'react';
 import PlanetsList from '../planets-list';
 import SearchForm from '../search-form';
 
 import './app.scss';
 import ThrowErrorButton from '../throw-error-button';
 
-class App extends Component {
-  state = {
-    searchPhrase: localStorage.getItem('searchPhrase') || '',
-    loading: true,
-  };
+const App = (): ReactNode => {
+  const [searchPhrase, setSearchPhrase] = useState(
+    localStorage.getItem('searchPhrase') || ''
+  );
+  const [loading, setLoading] = useState(true);
 
-  changeSearchPhrase = (newPhrase: string): void => {
-    this.setState({
-      searchPhrase: newPhrase,
-    });
+  const changeSearchPhrase = (newPhrase: string): void => {
+    setSearchPhrase(newPhrase);
     localStorage.setItem('searchPhrase', newPhrase);
   };
 
-  changeLoading = (value: boolean): void => {
-    this.setState({
-      loading: value,
-    });
+  const changeLoading = (value: boolean): void => {
+    setLoading(value);
   };
 
-  render() {
-    const { searchPhrase, loading } = this.state;
-    return (
-      <div className="container">
-        <SearchForm
-          searchPhrase={searchPhrase}
-          loading={loading}
-          onChangeSearchPhrase={this.changeSearchPhrase}
-          onChangeLoading={this.changeLoading}
-        />
-        <ThrowErrorButton />
-        <PlanetsList
-          loading={loading}
-          searchPhrase={searchPhrase}
-          onChangeLoading={this.changeLoading}
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div className="container">
+      <SearchForm
+        searchPhrase={searchPhrase}
+        loading={loading}
+        onChangeSearchPhrase={changeSearchPhrase}
+        onChangeLoading={changeLoading}
+      />
+      <ThrowErrorButton />
+      <PlanetsList
+        loading={loading}
+        searchPhrase={searchPhrase}
+        onChangeLoading={changeLoading}
+      />
+    </div>
+  );
+};
 
 export default App;

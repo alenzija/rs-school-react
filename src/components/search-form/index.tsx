@@ -1,4 +1,4 @@
-import { Component, createRef } from 'react';
+import { ReactNode, useRef } from 'react';
 
 import './seacrh-form.scss';
 
@@ -9,12 +9,14 @@ type SearchFormProps = Readonly<{
   onChangeLoading: (value: boolean) => void;
 }>;
 
-class SearchForm extends Component<SearchFormProps> {
-  inputRef = createRef<HTMLInputElement>();
+const SearchForm = (props: Readonly<SearchFormProps>): ReactNode => {
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  private updateSearchPhrase = (): void => {
-    const { searchPhrase, onChangeSearchPhrase, onChangeLoading } = this.props;
-    const newSearchPhrase = this.inputRef.current?.value.trim() || '';
+  const { searchPhrase, onChangeSearchPhrase, onChangeLoading, loading } =
+    props;
+
+  const updateSearchPhrase = (): void => {
+    const newSearchPhrase = inputRef.current?.value.trim() || '';
     if (newSearchPhrase === searchPhrase) {
       return;
     }
@@ -22,22 +24,19 @@ class SearchForm extends Component<SearchFormProps> {
     onChangeLoading(true);
   };
 
-  render() {
-    const { searchPhrase, loading } = this.props;
-    return (
-      <form className="search-form" onSubmit={(e) => e.preventDefault()}>
-        <input
-          className="search-form__input"
-          ref={this.inputRef}
-          defaultValue={searchPhrase}
-          placeholder="Enter a planet name"
-        />
-        <button disabled={loading} onClick={this.updateSearchPhrase}>
-          Search
-        </button>
-      </form>
-    );
-  }
-}
+  return (
+    <form className="search-form" onSubmit={(e) => e.preventDefault()}>
+      <input
+        className="search-form__input"
+        ref={inputRef}
+        defaultValue={searchPhrase}
+        placeholder="Enter a planet name"
+      />
+      <button disabled={loading} onClick={updateSearchPhrase}>
+        Search
+      </button>
+    </form>
+  );
+};
 
 export default SearchForm;

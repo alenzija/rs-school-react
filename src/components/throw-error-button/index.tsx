@@ -1,29 +1,22 @@
-import { Component } from 'react';
+import { ReactNode, useState } from 'react';
 
 import './throw-error-button.scss';
 
-class ThrowErrorButton extends Component {
-  state = {
-    throwError: false,
+const ThrowErrorButton = (): ReactNode => {
+  const [throwError, setThrowError] = useState(false);
+
+  const handleError = (): void => {
+    setThrowError(true);
   };
 
-  private handleError = (): void => {
-    this.setState({
-      throwError: true,
-    });
-  };
-
-  render() {
-    const { throwError } = this.state;
-    if (throwError) {
-      throw Error('check ErrorBoundary');
-    }
-    return (
-      <button className="throw-error-button" onClick={this.handleError}>
-        Throw Error
-      </button>
-    );
+  if (throwError) {
+    throw Error('check ErrorBoundary');
   }
-}
+  return (
+    <button className="throw-error-button" onClick={handleError}>
+      Throw Error
+    </button>
+  );
+};
 
 export default ThrowErrorButton;
