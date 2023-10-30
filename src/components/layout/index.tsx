@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { Outlet, useParams } from 'react-router-dom';
+import { ReactNode, useEffect, useMemo } from 'react';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import PlanetsList from '../planets-list';
 import SearchForm from '../search-form';
 
@@ -13,8 +13,21 @@ type LayoutProps = {
 const Layout = (props: LayoutProps): ReactNode => {
   const { searchPhrase, loading, onChangeLoading, onChangeSearchPhrase } =
     props;
-  const { page } = useParams();
-  console.log('layout', page);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const queryParams = useMemo(
+    () => new URLSearchParams(location.search),
+    [location.search]
+  );
+
+  const page = queryParams.get('page') || 1;
+
+  useEffect(() => {
+    queryParams.set('page', page.toString());
+    navigate({ search: queryParams.toString() });
+  }, [navigate, queryParams, page]);
+
   return (
     <>
       <div className="container">
@@ -28,7 +41,7 @@ const Layout = (props: LayoutProps): ReactNode => {
           loading={loading}
           searchPhrase={searchPhrase}
           onChangeLoading={onChangeLoading}
-          page={page ? +page : 1}
+          page={+page}
         />
       </div>
       <Outlet />

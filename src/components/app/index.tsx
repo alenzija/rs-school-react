@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react';
 
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import './app.scss';
 import Layout from '../layout';
@@ -22,9 +22,8 @@ const App = (): ReactNode => {
 
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/pages/1" replace />} />
       <Route
-        path="/pages/:page"
+        path="/"
         element={
           <Layout
             searchPhrase={searchPhrase}
