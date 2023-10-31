@@ -1,26 +1,50 @@
-import { ReactNode, useRef } from 'react';
+import { ReactNode, useEffect, useRef, useState, useMemo } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import './seacrh-form.scss';
 
 type SearchFormProps = Readonly<{
   loading: boolean;
-  searchPhrase: string;
-  onChangeSearchPhrase: (str: string) => void;
   onChangeLoading: (value: boolean) => void;
 }>;
 
 const SearchForm = (props: Readonly<SearchFormProps>): ReactNode => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [searchPhrase, setSearchPhrase] = useState<string | null>(
+    localStorage.getItem('searchPhrase')
+  );
 
-  const { searchPhrase, onChangeSearchPhrase, onChangeLoading, loading } =
-    props;
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const queryParams = useMemo(
+    () => new URLSearchParams(location.search),
+    [location.search]
+  );
+
+  useEffect(() => {
+    if (searchPhrase) {
+      localStorage.setItem('searchPhrase', searchPhrase);
+      queryParams.set('search', searchPhrase);
+      navigate({ search: queryParams.toString() });
+    } else {
+      localStorage.removeItem('searchPhrase');
+      queryParams.delete('search');
+      navigate({});
+    }
+  }, [navigate, queryParams, searchPhrase]);
+
+  const { onChangeLoading, loading } = props;
 
   const updateSearchPhrase = (): void => {
-    const newSearchPhrase = inputRef.current?.value.trim() || '';
+    let newSearchPhrase: string | null = inputRef.current?.value.trim() || '';
+    if (newSearchPhrase === '') {
+      newSearchPhrase = null;
+    }
     if (newSearchPhrase === searchPhrase) {
       return;
     }
-    onChangeSearchPhrase(newSearchPhrase.trim());
+    setSearchPhrase(newSearchPhrase);
     onChangeLoading(true);
   };
 
@@ -29,7 +53,7 @@ const SearchForm = (props: Readonly<SearchFormProps>): ReactNode => {
       <input
         className="search-form__input"
         ref={inputRef}
-        defaultValue={searchPhrase}
+        defaultValue={searchPhrase ? searchPhrase : undefined}
         placeholder="Enter a planet name"
       />
       <button disabled={loading} onClick={updateSearchPhrase}>

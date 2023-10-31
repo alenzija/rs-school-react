@@ -1,4 +1,5 @@
-import { ReactNode, useCallback, useEffect, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useState, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import Planet from '../../types/planet';
 import PlanetsItem from '../planets-item';
@@ -12,18 +13,26 @@ import ErrorMessage from '../error-message';
 type PlanetsListProps = Readonly<{
   onChangeLoading: (value: boolean) => void;
   loading: boolean;
-  searchPhrase: string;
-  page: number;
 }>;
 
 const PlanetsList = (props: PlanetsListProps): ReactNode => {
   const [planets, setPlanets] = useState<Planet[]>([]);
   const [error, setError] = useState(false);
 
-  const { onChangeLoading, searchPhrase, loading, page } = props;
+  const location = useLocation();
+
+  const queryParams = useMemo(() => {
+    return new URLSearchParams(location.search);
+  }, [location.search]);
+
+  const { onChangeLoading, loading } = props;
 
   const updatePlanets = useCallback((): void => {
-    if (searchPhrase === '') {
+    console.log('>>>UPDATE LIST');
+    const searchPhrase = queryParams.get('search');
+    const queryPage = queryParams.get('page');
+    const page = queryPage ? +queryPage : 1;
+    if (searchPhrase === null) {
       SwapiService.getAllPlanets(page)
         .then((data) => {
           setPlanets(data);
@@ -38,7 +47,7 @@ const PlanetsList = (props: PlanetsListProps): ReactNode => {
         .catch(() => setError(true))
         .finally(() => onChangeLoading(false));
     }
-  }, [onChangeLoading, searchPhrase, page]);
+  }, [queryParams, onChangeLoading]);
 
   useEffect(() => {
     updatePlanets();
