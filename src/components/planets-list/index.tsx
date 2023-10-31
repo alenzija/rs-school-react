@@ -4,15 +4,16 @@ import { useLocation } from 'react-router-dom';
 import Planet from '../../types/planet';
 import PlanetsItem from '../planets-item';
 import Spinner from '../spinner';
+import ErrorMessage from '../error-message';
 
 import SwapiService from '../../services/swapi-service';
 
 import './planets-list.scss';
-import ErrorMessage from '../error-message';
 
 type PlanetsListProps = Readonly<{
   onChangeLoading: (value: boolean) => void;
   loading: boolean;
+  onChangeHasNextPage: (value: boolean) => void;
 }>;
 
 const PlanetsList = (props: PlanetsListProps): ReactNode => {
@@ -25,29 +26,32 @@ const PlanetsList = (props: PlanetsListProps): ReactNode => {
     return new URLSearchParams(location.search);
   }, [location.search]);
 
-  const { onChangeLoading, loading } = props;
+  const { onChangeLoading, loading, onChangeHasNextPage } = props;
 
   const updatePlanets = useCallback((): void => {
     console.log('>>>UPDATE LIST');
+    setError(false);
     const searchPhrase = queryParams.get('search');
     const queryPage = queryParams.get('page');
     const page = queryPage ? +queryPage : 1;
     if (searchPhrase === null) {
       SwapiService.getAllPlanets(page)
         .then((data) => {
-          setPlanets(data);
+          setPlanets(data.planets);
+          onChangeHasNextPage(data.nextPage);
         })
         .catch(() => setError(true))
         .finally(() => onChangeLoading(false));
     } else {
       SwapiService.searchPlanetByName(searchPhrase, page)
         .then((data) => {
-          setPlanets(data);
+          setPlanets(data.planets);
+          onChangeHasNextPage(data.nextPage);
         })
         .catch(() => setError(true))
         .finally(() => onChangeLoading(false));
     }
-  }, [queryParams, onChangeLoading]);
+  }, [queryParams, onChangeLoading, onChangeHasNextPage]);
 
   useEffect(() => {
     updatePlanets();

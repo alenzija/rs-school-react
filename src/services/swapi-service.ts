@@ -13,19 +13,24 @@ export default class SwapiService {
     }));
   }
 
-  public static async getAllPlanets(page: number): Promise<Planet[]> {
+  public static async getAllPlanets(
+    page: number
+  ): Promise<{ planets: Planet[]; nextPage: boolean }> {
     const res = await fetch(`${this.baseURL}/planets/?page=${page}`);
     if (!res.ok) {
       throw Error('Something went wrong!');
     }
     const data = await res.json();
-    return this.transfromPlanetsData(data.results);
+    return {
+      planets: this.transfromPlanetsData(data.results),
+      nextPage: !!data.next,
+    };
   }
 
   public static async searchPlanetByName(
     name: string,
     page: number
-  ): Promise<Planet[]> {
+  ): Promise<{ planets: Planet[]; nextPage: boolean }> {
     const res = await fetch(
       `${this.baseURL}/planets/?search=${name}&page=${page}`
     );
@@ -33,6 +38,9 @@ export default class SwapiService {
       throw Error('Something went wrong!');
     }
     const data = await res.json();
-    return this.transfromPlanetsData(data.results);
+    return {
+      planets: this.transfromPlanetsData(data.results),
+      nextPage: !!data.next,
+    };
   }
 }
