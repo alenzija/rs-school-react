@@ -11,10 +11,15 @@ type LayoutProps = {
 };
 
 const Layout = (props: LayoutProps): ReactNode => {
+  const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(true);
 
   const changeHasNextPage = useCallback((value: boolean): void => {
     setHasNextPage(value);
+  }, []);
+
+  const changePage = useCallback((value: number): void => {
+    setPage(value);
   }, []);
 
   const { loading, onChangeLoading } = props;
@@ -22,7 +27,11 @@ const Layout = (props: LayoutProps): ReactNode => {
   return (
     <>
       <div className="container">
-        <SearchForm loading={loading} onChangeLoading={onChangeLoading} />
+        <SearchForm
+          loading={loading}
+          onChangeLoading={onChangeLoading}
+          onChangePage={changePage}
+        />
         <PlanetsList
           loading={loading}
           onChangeLoading={onChangeLoading}
@@ -32,6 +41,8 @@ const Layout = (props: LayoutProps): ReactNode => {
           loading={loading}
           onChangeLoading={onChangeLoading}
           hasNextPage={hasNextPage}
+          page={page}
+          onChangePage={changePage}
         />
       </div>
       <Outlet />

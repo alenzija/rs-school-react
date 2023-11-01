@@ -1,15 +1,15 @@
-import { ReactNode, useState, useEffect, useMemo } from 'react';
+import { ReactNode, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 type PaginationProps = {
   hasNextPage: boolean;
   loading: boolean;
   onChangeLoading: (value: boolean) => void;
+  page: number;
+  onChangePage: (value: number) => void;
 };
 
 const Pagination = (props: PaginationProps): ReactNode => {
-  const [page, setPage] = useState(1);
-
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -18,25 +18,25 @@ const Pagination = (props: PaginationProps): ReactNode => {
     [location.search]
   );
 
+  const { hasNextPage, loading, onChangeLoading, page, onChangePage } = props;
+
   useEffect(() => {
     queryParams.set('page', page.toString());
     navigate({ search: queryParams.toString() });
   }, [navigate, queryParams, page]);
 
-  const { hasNextPage, loading, onChangeLoading } = props;
-
   const toPrevPage = () => {
-    setPage(page - 1);
+    onChangePage(page - 1);
     onChangeLoading(true);
   };
 
   const toNextPage = () => {
-    setPage(page + 1);
+    onChangePage(page + 1);
     onChangeLoading(true);
   };
 
   return (
-    <>
+    <div style={{ display: loading ? 'none' : 'block' }}>
       <button disabled={page === 1 || loading} onClick={toPrevPage}>
         Prev
       </button>
@@ -44,7 +44,7 @@ const Pagination = (props: PaginationProps): ReactNode => {
       <button disabled={!hasNextPage || loading} onClick={toNextPage}>
         Next
       </button>
-    </>
+    </div>
   );
 };
 

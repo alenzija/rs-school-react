@@ -6,6 +6,7 @@ import './seacrh-form.scss';
 type SearchFormProps = Readonly<{
   loading: boolean;
   onChangeLoading: (value: boolean) => void;
+  onChangePage: (value: number) => void;
 }>;
 
 const SearchForm = (props: Readonly<SearchFormProps>): ReactNode => {
@@ -22,30 +23,34 @@ const SearchForm = (props: Readonly<SearchFormProps>): ReactNode => {
     [location.search]
   );
 
+  const { onChangeLoading, loading, onChangePage } = props;
+
   useEffect(() => {
     if (searchPhrase) {
       localStorage.setItem('searchPhrase', searchPhrase);
-      queryParams.set('search', searchPhrase);
-      navigate({ search: queryParams.toString() });
     } else {
       localStorage.removeItem('searchPhrase');
-      queryParams.delete('search');
-      navigate({});
     }
-  }, [navigate, queryParams, searchPhrase]);
-
-  const { onChangeLoading, loading } = props;
+  }, [searchPhrase]);
 
   const updateSearchPhrase = (): void => {
     let newSearchPhrase: string | null = inputRef.current?.value.trim() || '';
     if (newSearchPhrase === '') {
       newSearchPhrase = null;
+      queryParams.delete('search');
     }
     if (newSearchPhrase === searchPhrase) {
       return;
     }
+    if (newSearchPhrase !== null) {
+      queryParams.set('search', newSearchPhrase);
+    }
     setSearchPhrase(newSearchPhrase);
+    onChangePage(1);
+    queryParams.set('page', '1');
+
     onChangeLoading(true);
+    navigate({ search: queryParams.toString() });
   };
 
   return (
