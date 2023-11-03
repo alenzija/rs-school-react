@@ -1,7 +1,7 @@
 import { ReactNode, useCallback, useEffect, useState, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import Planet from '../../types/planet';
+import { IPlanet } from '../../types/planet';
 import PlanetsItem from '../planets-item';
 import Spinner from '../spinner';
 import ErrorMessage from '../error-message';
@@ -17,7 +17,7 @@ type PlanetsListProps = Readonly<{
 }>;
 
 const PlanetsList = (props: PlanetsListProps): ReactNode => {
-  const [planets, setPlanets] = useState<Planet[]>([]);
+  const [planets, setPlanets] = useState<IPlanet[]>([]);
   const [error, setError] = useState(false);
 
   const location = useLocation();
@@ -70,7 +70,7 @@ const PlanetsList = (props: PlanetsListProps): ReactNode => {
   );
 };
 
-const View = (props: { planets: Planet[] }): ReactNode => {
+const View = (props: { planets: IPlanet[] }): ReactNode => {
   const { planets } = props;
   if (planets.length === 0) {
     return <div>No planets</div>;

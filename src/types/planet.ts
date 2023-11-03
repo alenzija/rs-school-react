@@ -1,8 +1,12 @@
-type Planet = {
+export interface IPlanet {
   name: string;
   population: string;
   climate: string;
   terrain: string;
-};
+}
 
-export default Planet;
+export interface IPlanetDescription extends IPlanet {
+  diameter: string;
+  orbitalPeriod: string;
+  films: string[];
+}

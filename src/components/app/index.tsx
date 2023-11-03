@@ -2,8 +2,10 @@ import { ReactNode, useCallback, useState } from 'react';
 
 import { Routes, Route } from 'react-router-dom';
 
-import './app.scss';
 import Layout from '../layout';
+import PlanetDescription from '../planet-description';
+
+import './app.scss';
 
 const App = (): ReactNode => {
   const [loading, setLoading] = useState(true);
@@ -17,7 +19,9 @@ const App = (): ReactNode => {
       <Route
         path="/"
         element={<Layout loading={loading} onChangeLoading={changeLoading} />}
-      ></Route>
+      >
+        <Route path="/planets/:name" element={<PlanetDescription />} />
+      </Route>
     </Routes>
   );
 };

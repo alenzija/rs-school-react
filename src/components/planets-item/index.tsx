@@ -1,12 +1,19 @@
 import { ReactNode } from 'react';
-import Planet from '../../types/planet';
+import { useNavigate } from 'react-router-dom';
+import { IPlanet } from '../../types/planet';
 
 import './planets-item.scss';
 
-const PlanetsItem = (props: Readonly<Planet>): ReactNode => {
+const PlanetsItem = (props: Readonly<IPlanet>): ReactNode => {
+  const navigate = useNavigate();
   const { name, population, climate, terrain } = props;
   return (
-    <div className="planet">
+    <div
+      className="planet"
+      onClick={() => {
+        navigate(`/planets/${name}`);
+      }}
+    >
       <div className="planet__item">
         <span className="planet__item--title">Name:</span> {name}
       </div>
