@@ -2,11 +2,7 @@ import { ReactNode } from 'react';
 
 const Spinner = (): ReactNode => {
   return (
-    <div
-      style={{
-        width: '100vw',
-      }}
-    >
+    <div className="spinner">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         style={{

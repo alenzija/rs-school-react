@@ -10,6 +10,8 @@ import { IPlanetDescription } from '../../types/planet';
 
 import closeImg from '../../assets/image/close.png';
 
+import './planet-description.scss';
+
 const PlanetDescription = (): ReactNode => {
   const params = useParams();
   const [planet, setPlanet] = useState<IPlanetDescription | null>(null);
@@ -38,11 +40,14 @@ const PlanetDescription = (): ReactNode => {
       <></>
     );
   return (
-    <>
+    <div
+      className="planet-description"
+      style={{ display: loading || error || planet ? 'block' : 'none' }}
+    >
       {errorMessage}
       {spinner}
       {content}
-    </>
+    </div>
   );
 };
 
@@ -56,39 +61,40 @@ const View = (props: { data: IPlanetDescription }): ReactNode => {
     props.data;
 
   return (
-    <div>
-      <button
+    <>
+      <div
+        className="close-button"
         onClick={() => {
           navigate(`/?${queryParams.toString()}`);
         }}
       >
-        <img src={closeImg} alt="close image" />
-      </button>
-      <div>
-        <span>Name: </span>
+        <img className="close-button__img" src={closeImg} alt="close image" />
+      </div>
+      <div className="planet__item">
+        <span className="planet__item--title">Name: </span>
         {name}
       </div>
-      <div>
-        <span>Climated: </span>
+      <div className="planet__item">
+        <span className="planet__item--title">Climate: </span>
         {climate}
       </div>
-      <div>
-        <span>Diametr: </span>
+      <div className="planet__item">
+        <span className="planet__item--title">Diametr: </span>
         {diameter}
       </div>
-      <div>
-        <span>Orbital period: </span>
+      <div className="planet__item">
+        <span className="planet__item--title">Orbital period: </span>
         {orbitalPeriod}
       </div>
-      <div>
-        <span>Population: </span>
+      <div className="planet__item">
+        <span className="planet__item--title">Population: </span>
         {population}
       </div>
-      <div>
-        <span>Terrain: </span>
+      <div className="planet__item">
+        <span className="planet__item--title">Terrain: </span>
         {terrain}
       </div>
-    </div>
+    </>
   );
 };
 

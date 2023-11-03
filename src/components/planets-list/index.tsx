@@ -62,11 +62,11 @@ const PlanetsList = (props: PlanetsListProps): ReactNode => {
   const content = !(error || loading) ? <View planets={planets} /> : null;
 
   return (
-    <div className="planets">
+    <>
       {errorMessage}
       {spinner}
       {content}
-    </div>
+    </>
   );
 };
 
@@ -76,17 +76,16 @@ const View = (props: { planets: IPlanet[] }): ReactNode => {
     return <div>No planets</div>;
   }
   return (
-    <>
+    <div className="planets">
       {planets.map((planet) => (
         <PlanetsItem
           key={planet.name}
           name={planet.name}
-          population={planet.population}
           climate={planet.climate}
           terrain={planet.terrain}
         />
       ))}
-    </>
+    </div>
   );
 };
 

@@ -1,4 +1,8 @@
 .container {
-  max-width: 1320px;
-  margin: 10px auto;
+  flex-basis: 70%;
+  flex-grow: 3;
+
+  .spinner {
+    width: inherit;
+  }
 }
