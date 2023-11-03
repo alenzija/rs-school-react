@@ -1,41 +1,69 @@
 import { ReactNode, useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+
+import Spinner from '../spinner';
+import ErrorMessage from '../error-message';
 
 import SwapiService from '../../services/swapi-service';
-import { useParams } from 'react-router-dom';
+
 import { IPlanetDescription } from '../../types/planet';
+
+import closeImg from '../../assets/image/close.png';
 
 const PlanetDescription = (): ReactNode => {
   const params = useParams();
   const [planet, setPlanet] = useState<IPlanetDescription | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const name = params.name;
     if (!name) {
       return;
     }
-    SwapiService.getPlanetByName(name).then((planet) => setPlanet(planet));
+    setLoading(true);
+    setError(false);
+    SwapiService.getPlanetByName(name)
+      .then((planet) => setPlanet(planet))
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
   }, [params.name]);
 
-  // const { name, climate, diametr, orbitalPeriod, population, terrain, films } =
-  //   props;
-  const content = planet ? <View data={planet} /> : <></>;
-  return <>{content}</>;
+  const spinner = loading ? <Spinner /> : null;
+  const errorMessage = error ? <ErrorMessage /> : null;
+  const content =
+    planet && !(error || loading) ? (
+      <View data={planet} key={planet.name} />
+    ) : (
+      <></>
+    );
+  return (
+    <>
+      {errorMessage}
+      {spinner}
+      {content}
+    </>
+  );
 };
 
 const View = (props: { data: IPlanetDescription }): ReactNode => {
-  const { name, climate, diameter, orbitalPeriod, population, terrain, films } =
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+
+  const { name, climate, diameter, orbitalPeriod, population, terrain } =
     props.data;
-  // {
-  //   name: 'name',
-  //   climate: 'climate',
-  //   diameter: 'diameter',
-  //   orbitalPeriod: 'orbitalPeriod',
-  //   population: 'population',
-  //   terrain: 'terrain',
-  //   films: [],
-  // };
+
   return (
     <div>
+      <button
+        onClick={() => {
+          navigate(`/?${queryParams.toString()}`);
+        }}
+      >
+        <img src={closeImg} alt="close image" />
+      </button>
       <div>
         <span>Name: </span>
         {name}
@@ -59,15 +87,6 @@ const View = (props: { data: IPlanetDescription }): ReactNode => {
       <div>
         <span>Terrain: </span>
         {terrain}
-      </div>
-      <div>
-        <div>FILMS</div>
-        <ul>
-          {films.map((film: string) => {
-            SwapiService.getFilm(film);
-            return <></>;
-          })}
-        </ul>
       </div>
     </div>
   );

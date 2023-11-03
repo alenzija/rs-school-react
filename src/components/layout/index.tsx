@@ -11,15 +11,15 @@ type LayoutProps = {
 };
 
 const Layout = (props: LayoutProps): ReactNode => {
-  const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(true);
-
-  const changeHasNextPage = useCallback((value: boolean): void => {
-    setHasNextPage(value);
-  }, []);
+  const [page, setPage] = useState(1);
 
   const changePage = useCallback((value: number): void => {
     setPage(value);
+  }, []);
+
+  const changeHasNextPage = useCallback((value: boolean): void => {
+    setHasNextPage(value);
   }, []);
 
   const { loading, onChangeLoading } = props;

@@ -7,16 +7,16 @@ export default class SwapiService {
   ): IPlanet[] {
     return data.map((result) => ({
       name: result.name && result.name !== 'unknown' ? result.name : 'no name',
-      population:
-        result.population && result.population !== 'unknown'
-          ? result.population
-          : 'no population',
+      // population:
+      //   result.population && result.population !== 'unknown'
+      //     ? result.population
+      //     : 'no population',
       climate:
         result.climate && result.climate !== 'unknown'
           ? result.climate
           : 'no climate',
       terrain:
-        result.terrsin && result.terrain !== 'unknown'
+        result.terrain && result.terrain !== 'unknown'
           ? result.terrain
           : 'no terrain',
     }));
@@ -36,7 +36,7 @@ export default class SwapiService {
           ? data.climate
           : 'no climate',
       terrain:
-        data.terrsin && data.terrain !== 'unknown'
+        data.terrain && data.terrain !== 'unknown'
           ? data.terrain
           : 'no terrain',
       diameter:
@@ -93,9 +93,9 @@ export default class SwapiService {
     return this.transfromPlanetsDataToPlanetDescription(data.results[0]);
   }
 
-  public static async getFilm(url: string): Promise<void> {
+  public static async getFilm(url: string): Promise<string | null> {
     const res = await fetch(url);
     const data = await res.json();
-    console.log(data);
+    return data.title;
   }
 }
