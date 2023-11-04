@@ -1,6 +1,8 @@
 import { ReactNode, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+import './pagination.scss';
+
 type PaginationProps = {
   hasNextPage: boolean;
   loading: boolean;
@@ -36,13 +38,13 @@ const Pagination = (props: PaginationProps): ReactNode => {
   };
 
   return (
-    <div style={{ display: loading ? 'none' : 'block' }}>
+    <div className="pagination" style={{ display: loading ? 'none' : 'flex' }}>
       <button disabled={page === 1 || loading} onClick={toPrevPage}>
-        Prev
+        {'<'}
       </button>
       <button disabled={true}>{page}</button>
       <button disabled={!hasNextPage || loading} onClick={toNextPage}>
-        Next
+        {'>'}
       </button>
     </div>
   );
