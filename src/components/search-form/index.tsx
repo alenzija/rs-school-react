@@ -1,4 +1,11 @@
-import { ReactNode, useEffect, useRef, useState, useMemo } from 'react';
+import {
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+  ChangeEvent,
+} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 import './seacrh-form.scss';
@@ -14,6 +21,15 @@ const SearchForm = (props: Readonly<SearchFormProps>): ReactNode => {
   const [searchPhrase, setSearchPhrase] = useState<string | null>(
     localStorage.getItem('searchPhrase')
   );
+  const [value, setValue] = useState<string | undefined>(undefined);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const target = e.target;
+    if (!target || !(target instanceof HTMLInputElement)) {
+      return;
+    }
+    setValue(target.value);
+  };
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -32,6 +48,23 @@ const SearchForm = (props: Readonly<SearchFormProps>): ReactNode => {
       localStorage.removeItem('searchPhrase');
     }
   }, [searchPhrase]);
+
+  useEffect(() => {
+    if (searchPhrase) {
+      localStorage.setItem('searchPhrase', searchPhrase);
+    } else {
+      localStorage.removeItem('searchPhrase');
+    }
+  }, [searchPhrase]);
+
+  useEffect(() => {
+    const newSearchPhrase = queryParams.get('search');
+    if (!newSearchPhrase) {
+      return;
+    }
+    setSearchPhrase(newSearchPhrase);
+    setValue(newSearchPhrase);
+  }, [queryParams]);
 
   const updateSearchPhrase = (): void => {
     let newSearchPhrase: string | null = inputRef.current?.value.trim() || '';
@@ -58,7 +91,8 @@ const SearchForm = (props: Readonly<SearchFormProps>): ReactNode => {
       <input
         className="search-form__input"
         ref={inputRef}
-        defaultValue={searchPhrase ? searchPhrase : undefined}
+        value={value}
+        onChange={handleChange}
         placeholder="Enter a planet name"
       />
       <button disabled={loading} onClick={updateSearchPhrase}>
