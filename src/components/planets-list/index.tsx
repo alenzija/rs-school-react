@@ -1,5 +1,5 @@
 import { ReactNode, useCallback, useEffect, useState, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 import { IPlanet } from '../../types/planet';
 import PlanetsItem from '../planets-item';
@@ -71,14 +71,17 @@ const PlanetsList = (props: PlanetsListProps): ReactNode => {
 };
 
 const View = (props: { planets: IPlanet[] }): ReactNode => {
+  const params = useParams();
   const { planets } = props;
   if (planets.length === 0) {
     return <div>No planets</div>;
   }
+  const { name } = params;
   return (
     <div className="planets">
       {planets.map((planet) => (
         <PlanetsItem
+          active={!!name && name === planet.name}
           key={planet.name}
           name={planet.name}
           climate={planet.climate}

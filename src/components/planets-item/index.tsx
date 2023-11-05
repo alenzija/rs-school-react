@@ -4,16 +4,20 @@ import { IPlanet } from '../../types/planet';
 
 import './planets-item.scss';
 
-const PlanetsItem = (props: Readonly<IPlanet>): ReactNode => {
+interface PlanetItemProps extends IPlanet {
+  active: boolean;
+}
+
+const PlanetsItem = (props: PlanetItemProps): ReactNode => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const queryParams = new URLSearchParams(location.search);
 
-  const { name, climate, terrain } = props;
+  const { name, climate, terrain, active } = props;
   return (
     <div
-      className="planet"
+      className={active ? 'planet active' : 'planet'}
       onClick={() => {
         navigate(`/planets/${name}/?${queryParams.toString()}`);
       }}
