@@ -21,9 +21,6 @@ const PlanetsItem = (props: Readonly<IPlanet>): ReactNode => {
       <div className="planet__item">
         <span className="planet__item--title">Name:</span> {name}
       </div>
-      {/* <div className="planet__item">
-        <span className="planet__item--title">Population:</span> {population}
-      </div> */}
       <div className="planet__item">
         <span className="planet__item--title">Climate:</span> {climate}
       </div>

@@ -7,10 +7,6 @@ export default class SwapiService {
   ): IPlanet[] {
     return data.map((result) => ({
       name: result.name && result.name !== 'unknown' ? result.name : 'no name',
-      // population:
-      //   result.population && result.population !== 'unknown'
-      //     ? result.population
-      //     : 'no population',
       climate:
         result.climate && result.climate !== 'unknown'
           ? result.climate
