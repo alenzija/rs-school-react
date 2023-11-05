@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 
 import Layout from '../layout';
 import PlanetDescription from '../planet-description';
+import Page404 from '../404';
 
 import './app.scss';
 
@@ -22,6 +23,7 @@ const App = (): ReactNode => {
       >
         <Route path="/planets/:name" element={<PlanetDescription />} />
       </Route>
+      <Route path="*" element={<Page404 />} />
     </Routes>
   );
 };

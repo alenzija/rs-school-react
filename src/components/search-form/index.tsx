@@ -21,7 +21,7 @@ const SearchForm = (props: Readonly<SearchFormProps>): ReactNode => {
   const [searchPhrase, setSearchPhrase] = useState<string | null>(
     localStorage.getItem('searchPhrase')
   );
-  const [value, setValue] = useState<string | undefined>(undefined);
+  const [value, setValue] = useState('');
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const target = e.target;
