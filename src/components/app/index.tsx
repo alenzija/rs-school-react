@@ -1,6 +1,11 @@
 import { ReactNode, useCallback, useState } from 'react';
 
-import { Routes, Route } from 'react-router-dom';
+import {
+  Route,
+  createBrowserRouter,
+  createRoutesFromElements,
+  RouterProvider,
+} from 'react-router-dom';
 
 import Layout from '../layout';
 import PlanetDescription from '../planet-description';
@@ -15,17 +20,19 @@ const App = (): ReactNode => {
     setLoading(value);
   }, []);
 
-  return (
-    <Routes>
+  const router = createBrowserRouter(
+    createRoutesFromElements(
       <Route
         path="/"
         element={<Layout loading={loading} onChangeLoading={changeLoading} />}
+        errorElement={<Page404 />}
       >
         <Route path="/planets/:name" element={<PlanetDescription />} />
       </Route>
-      <Route path="*" element={<Page404 />} />
-    </Routes>
+    )
   );
+
+  return <RouterProvider router={router} />;
 };
 
 export default App;
