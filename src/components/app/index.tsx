@@ -21,13 +21,23 @@ const planetListLoader = async ({
   request,
 }: {
   request: Request;
-}): Promise<DeferredData> => {
+}): Promise<DeferredData | null> => {
   const url = new URL(request.url);
   const search = url.searchParams.get('search') || '';
   const page = url.searchParams.has('page')
     ? +url.searchParams.get('page')!
     : 1;
-  return defer({ res: getPlanetList({ search, page }) });
+  try {
+    const res = await getPlanetList({ search, page });
+    console.log('LOADER >>>', { res });
+    if (!res) {
+      throw { status: 401 };
+    }
+    return defer({ res });
+  } catch (e) {
+    console.log('CATCH >>>', { e });
+    return Promise.resolve(null);
+  }
 };
 
 const router = createBrowserRouter(
@@ -44,12 +54,6 @@ const router = createBrowserRouter(
 );
 
 const App = (): ReactNode => {
-  // const [loading, setLoading] = useState(true);
-
-  // const changeLoading = useCallback((value: boolean): void => {
-  //   setLoading(value);
-  // }, []);
-
   return <RouterProvider router={router} />;
 };
 
