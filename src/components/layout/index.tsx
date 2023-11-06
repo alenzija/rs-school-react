@@ -25,9 +25,9 @@ const Layout = (): ReactNode => {
     <>
       <div className="container">
         <SearchForm
-        // loading={loading}
-        // onChangeLoading={onChangeLoading}
-        // onChangePage={changePage}
+          loading={state === 'loading'}
+          // onChangeLoading={onChangeLoading}
+          // onChangePage={changePage}
         />
         <Suspense fallback={<Spinner />}>
           <Await resolve={res}>
@@ -40,7 +40,7 @@ const Layout = (): ReactNode => {
                   // onChangeHasNextPage={changeHasNextPage}
                 />
                 <Pagination
-                  // loading={loading}
+                  loading={state === 'loading'}
                   // onChangeLoading={onChangeLoading}
                   hasNextPage={response.nextPage}
                   // page={page}

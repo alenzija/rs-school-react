@@ -1,27 +1,17 @@
-import {
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-  useMemo,
-  ChangeEvent,
-} from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { ReactNode, useRef, useState, ChangeEvent, FormEvent } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import './seacrh-form.scss';
 
-// type SearchFormProps = Readonly<{
-//   // loading: boolean;
-//   // onChangeLoading: (value: boolean) => void;
-//   onChangePage: (value: number) => void;
-// }>;
-
-const SearchForm = (): ReactNode => {
+const SearchForm = (props: { loading: boolean }): ReactNode => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [searchPhrase, setSearchPhrase] = useState<string | null>(
-    localStorage.getItem('searchPhrase')
-  );
+  const [searchParams, setSearchParams] = useSearchParams();
   const [value, setValue] = useState('');
+
+  const searchPhrase = localStorage.getItem('searchPhrase');
+  if (searchPhrase) {
+    searchParams.set('search', searchPhrase);
+  }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const target = e.target;
@@ -31,63 +21,26 @@ const SearchForm = (): ReactNode => {
     setValue(target.value);
   };
 
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const queryParams = useMemo(
-    () => new URLSearchParams(location.search),
-    [location.search]
-  );
-
-  // const { onChangePage } = props;
-
-  useEffect(() => {
-    if (searchPhrase) {
-      localStorage.setItem('searchPhrase', searchPhrase);
-    } else {
-      localStorage.removeItem('searchPhrase');
-    }
-  }, [searchPhrase]);
-
-  useEffect(() => {
-    if (searchPhrase) {
-      localStorage.setItem('searchPhrase', searchPhrase);
-    } else {
-      localStorage.removeItem('searchPhrase');
-    }
-  }, [searchPhrase]);
-
-  useEffect(() => {
-    const newSearchPhrase = queryParams.get('search');
-    if (!newSearchPhrase) {
-      return;
-    }
-    setSearchPhrase(newSearchPhrase);
-    setValue(newSearchPhrase);
-  }, [queryParams]);
-
-  const updateSearchPhrase = (): void => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
     let newSearchPhrase: string | null = inputRef.current?.value.trim() || '';
     if (newSearchPhrase === '') {
       newSearchPhrase = null;
-      queryParams.delete('search');
+      localStorage.removeItem('searchPhrase');
+      searchParams.delete('search');
+      return;
     }
     if (newSearchPhrase === searchPhrase) {
       return;
     }
-    if (newSearchPhrase !== null) {
-      queryParams.set('search', newSearchPhrase);
-    }
-    setSearchPhrase(newSearchPhrase);
-    // onChangePage(1);
-    queryParams.set('page', '1');
-
-    // onChangeLoading(true);
-    navigate({ search: queryParams.toString() });
+    localStorage.setItem('searchPhrase', newSearchPhrase);
+    setSearchParams({ ...searchParams, search: newSearchPhrase });
   };
 
+  const { loading } = props;
+
   return (
-    <form className="search-form" onSubmit={(e) => e.preventDefault()}>
+    <form className="search-form" onSubmit={handleSubmit}>
       <input
         className="search-form__input"
         ref={inputRef}
@@ -95,7 +48,9 @@ const SearchForm = (): ReactNode => {
         onChange={handleChange}
         placeholder="Enter a planet name"
       />
-      <button onClick={updateSearchPhrase}>Search</button>
+      <button type="submit" disabled={loading}>
+        Search
+      </button>
     </form>
   );
 };
