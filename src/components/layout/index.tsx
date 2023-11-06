@@ -1,49 +1,55 @@
-import { ReactNode, useCallback, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { ReactNode, Suspense } from 'react';
+import { Await, Outlet, useLoaderData, useNavigation } from 'react-router-dom';
 
-import PlanetsList from '../planets-list';
 import SearchForm from '../search-form';
 import Pagination from '../pagination';
+import PlanetsList from '../planets-list';
+import Spinner from '../spinner';
 
-type LayoutProps = {
-  loading: boolean;
-  onChangeLoading: (value: boolean) => void;
-};
+import ResponseType from '../../types/response-type';
 
-const Layout = (props: LayoutProps): ReactNode => {
-  const [hasNextPage, setHasNextPage] = useState(true);
-  const [page, setPage] = useState(1);
+const Layout = (): ReactNode => {
+  const { res } = useLoaderData() as { res: ResponseType };
+  const { state } = useNavigation();
+  // const [page, setPage] = useState(1);
 
-  const changePage = useCallback((value: number): void => {
-    setPage(value);
-  }, []);
+  // const changePage = useCallback((value: number): void => {
+  //   setPage(value);
+  // }, []);
 
-  const changeHasNextPage = useCallback((value: boolean): void => {
-    setHasNextPage(value);
-  }, []);
-
-  const { loading, onChangeLoading } = props;
+  // const changeHasNextPage = useCallback((value: boolean): void => {
+  //   setHasNextPage(value);
+  // }, []);
 
   return (
     <>
       <div className="container">
         <SearchForm
-          loading={loading}
-          onChangeLoading={onChangeLoading}
-          onChangePage={changePage}
+        // loading={loading}
+        // onChangeLoading={onChangeLoading}
+        // onChangePage={changePage}
         />
-        <PlanetsList
-          loading={loading}
-          onChangeLoading={onChangeLoading}
-          onChangeHasNextPage={changeHasNextPage}
-        />
-        <Pagination
-          loading={loading}
-          onChangeLoading={onChangeLoading}
-          hasNextPage={hasNextPage}
-          page={page}
-          onChangePage={changePage}
-        />
+        <Suspense fallback={<Spinner />}>
+          <Await resolve={res}>
+            {(response) => (
+              <>
+                <PlanetsList
+                  planets={response.planets}
+                  loading={state === 'loading'}
+                  // onChangeLoading={onChangeLoading}
+                  // onChangeHasNextPage={changeHasNextPage}
+                />
+                <Pagination
+                  // loading={loading}
+                  // onChangeLoading={onChangeLoading}
+                  hasNextPage={response.nextPage}
+                  // page={page}
+                  // onChangePage={changePage}
+                />
+              </>
+            )}
+          </Await>
+        </Suspense>
       </div>
       <Outlet />
     </>

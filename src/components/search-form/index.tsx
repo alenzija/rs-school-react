@@ -10,13 +10,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 import './seacrh-form.scss';
 
-type SearchFormProps = Readonly<{
-  loading: boolean;
-  onChangeLoading: (value: boolean) => void;
-  onChangePage: (value: number) => void;
-}>;
+// type SearchFormProps = Readonly<{
+//   // loading: boolean;
+//   // onChangeLoading: (value: boolean) => void;
+//   onChangePage: (value: number) => void;
+// }>;
 
-const SearchForm = (props: Readonly<SearchFormProps>): ReactNode => {
+const SearchForm = (): ReactNode => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [searchPhrase, setSearchPhrase] = useState<string | null>(
     localStorage.getItem('searchPhrase')
@@ -39,7 +39,7 @@ const SearchForm = (props: Readonly<SearchFormProps>): ReactNode => {
     [location.search]
   );
 
-  const { onChangeLoading, loading, onChangePage } = props;
+  // const { onChangePage } = props;
 
   useEffect(() => {
     if (searchPhrase) {
@@ -79,10 +79,10 @@ const SearchForm = (props: Readonly<SearchFormProps>): ReactNode => {
       queryParams.set('search', newSearchPhrase);
     }
     setSearchPhrase(newSearchPhrase);
-    onChangePage(1);
+    // onChangePage(1);
     queryParams.set('page', '1');
 
-    onChangeLoading(true);
+    // onChangeLoading(true);
     navigate({ search: queryParams.toString() });
   };
 
@@ -95,9 +95,7 @@ const SearchForm = (props: Readonly<SearchFormProps>): ReactNode => {
         onChange={handleChange}
         placeholder="Enter a planet name"
       />
-      <button disabled={loading} onClick={updateSearchPhrase}>
-        Search
-      </button>
+      <button onClick={updateSearchPhrase}>Search</button>
     </form>
   );
 };

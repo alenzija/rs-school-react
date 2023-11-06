@@ -1,17 +1,18 @@
-import { ReactNode, useEffect, useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { ReactNode, useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import './pagination.scss';
 
 type PaginationProps = {
   hasNextPage: boolean;
-  loading: boolean;
-  onChangeLoading: (value: boolean) => void;
-  page: number;
-  onChangePage: (value: number) => void;
+  // loading: boolean;
+  // onChangeLoading: (value: boolean) => void;
+  // page: number;
+  // onChangePage: (value: number) => void;
 };
 
 const Pagination = (props: PaginationProps): ReactNode => {
+  // const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -20,30 +21,39 @@ const Pagination = (props: PaginationProps): ReactNode => {
     [location.search]
   );
 
-  const { hasNextPage, loading, onChangeLoading, page, onChangePage } = props;
+  const hasPage = queryParams.get('page');
+  const page = hasPage ? +hasPage : 1;
 
-  useEffect(() => {
-    queryParams.set('page', page.toString());
-    navigate({ search: queryParams.toString() });
-  }, [navigate, queryParams, page]);
+  const { hasNextPage } = props;
+
+  // useEffect(() => {
+  //   queryParams.set('page', page.toString());
+  //   navigate({ search: queryParams.toString() });
+  // }, [navigate, queryParams, page]);
 
   const toPrevPage = () => {
-    onChangePage(page - 1);
-    onChangeLoading(true);
+    // const newSearchParams = { ...searchParams, page: `${page - 1}` };
+    // setSearchParams(newSearchParams);
+    // onChangeLoading(true);
+    queryParams.set('page', `${page - 1}`);
+    navigate({ search: queryParams.toString() });
   };
 
   const toNextPage = () => {
-    onChangePage(page + 1);
-    onChangeLoading(true);
+    // const newSearchParams = { ...searchParams, page: `${page + 1}` };
+    // setSearchParams(newSearchParams);
+    queryParams.set('page', `${page + 1}`);
+    navigate({ search: queryParams.toString() });
+    //onChangeLoading(true);
   };
 
   return (
-    <div className="pagination" style={{ display: loading ? 'none' : 'flex' }}>
-      <button disabled={page === 1 || loading} onClick={toPrevPage}>
+    <div className="pagination">
+      <button disabled={page === 1} onClick={toPrevPage}>
         {'<'}
       </button>
       <button disabled={true}>{page}</button>
-      <button disabled={!hasNextPage || loading} onClick={toNextPage}>
+      <button disabled={!hasNextPage} onClick={toNextPage}>
         {'>'}
       </button>
     </div>
