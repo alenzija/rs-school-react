@@ -1,4 +1,4 @@
-import { ReactNode, Suspense } from 'react';
+import { ReactNode, Suspense, memo } from 'react';
 import { Await, Outlet, useLoaderData, useNavigation } from 'react-router-dom';
 
 import SearchForm from '../search-form';
@@ -45,4 +45,4 @@ const App = (): ReactNode => {
   );
 };
 
-export default App;
+export default memo(App);

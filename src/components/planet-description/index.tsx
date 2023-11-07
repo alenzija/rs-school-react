@@ -1,5 +1,12 @@
-import { ReactNode, useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { ReactNode, Suspense } from 'react';
+import {
+  useLocation,
+  useNavigate,
+  Params,
+  defer,
+  useLoaderData,
+  Await,
+} from 'react-router-dom';
 
 import Spinner from '../spinner';
 import ErrorMessage from '../error-message';
@@ -7,46 +14,44 @@ import ErrorMessage from '../error-message';
 import SwapiService from '../../services/swapi-service';
 
 import { IPlanetDescription } from '../../types/planet';
+import { DeferredData } from '@remix-run/router/dist/utils';
 
 import closeImg from '../../assets/image/close.png';
 
 import './planet-description.scss';
 
+export const planetDescriptionLoader = async ({
+  params,
+}: {
+  params: Params;
+}): Promise<DeferredData | undefined> => {
+  const { name } = params;
+  if (!name) {
+    return;
+  }
+  const res = SwapiService.getPlanetByName(name);
+  return defer({ res });
+};
+
 const PlanetDescription = (): ReactNode => {
-  const params = useParams();
-  const [planet, setPlanet] = useState<IPlanetDescription | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const data = useLoaderData() as { res: IPlanetDescription };
 
-  useEffect(() => {
-    const name = params.name;
-    if (!name) {
-      return;
-    }
-    setLoading(true);
-    setError(false);
-    SwapiService.getPlanetByName(name)
-      .then((planet) => setPlanet(planet))
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
-  }, [params.name]);
-
-  const spinner = loading ? <Spinner /> : null;
-  const errorMessage = error ? <ErrorMessage /> : null;
-  const content =
-    planet && !(error || loading) ? (
-      <View data={planet} key={planet.name} />
-    ) : (
-      <></>
-    );
   return (
     <div
       className="planet-description"
-      style={{ display: loading || error || planet ? 'block' : 'none' }}
+      style={{ display: data ? 'block' : 'none' }}
     >
-      {errorMessage}
-      {spinner}
-      {content}
+      <Suspense fallback={<Spinner />}>
+        <Await resolve={data.res}>
+          {(response) => {
+            return !response ? (
+              <ErrorMessage />
+            ) : (
+              <View data={response} key={response.name} />
+            );
+          }}
+        </Await>
+      </Suspense>
     </div>
   );
 };

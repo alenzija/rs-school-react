@@ -9,7 +9,9 @@ import {
 
 import App from './components/app';
 import ErrorBoundary from './components/error-boundary';
-import PlanetDescription from './components/planet-description';
+import PlanetDescription, {
+  planetDescriptionLoader,
+} from './components/planet-description';
 import Page404 from './components/404';
 
 import { planetListLoader } from './components/planets-list';
@@ -23,8 +25,16 @@ const router = createBrowserRouter(
       element={<App />}
       errorElement={<Page404 />}
       loader={planetListLoader}
+      // shouldRevalidate={(params) => {
+      //   console.warn('shouldRevalidate >>>', params);
+      //   return false;
+      // }}
     >
-      <Route path="/planets/:name" element={<PlanetDescription />} />
+      <Route
+        path="/planets/:name"
+        element={<PlanetDescription />}
+        loader={planetDescriptionLoader}
+      />
     </Route>
   )
 );

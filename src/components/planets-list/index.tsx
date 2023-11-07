@@ -24,8 +24,8 @@ export const planetListLoader = async ({
   try {
     const res =
       search === ''
-        ? await SwapiService.getAllPlanets(page)
-        : await SwapiService.searchPlanetByName(search, page);
+        ? SwapiService.getAllPlanets(page)
+        : SwapiService.searchPlanetByName(search, page);
     return defer({ res });
   } catch {
     return Promise.resolve(null);
