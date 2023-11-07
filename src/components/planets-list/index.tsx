@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
-import { useParams } from 'react-router-dom';
+import { defer, useParams } from 'react-router-dom';
 
 import { IPlanet } from '../../types/planet';
-import ResponseType from '../../types/response-type';
+import { DeferredData } from '@remix-run/router/dist/utils';
 
 import Spinner from '../spinner';
 import PlanetsItem from '../planets-item';
@@ -11,16 +11,25 @@ import SwapiService from '../../services/swapi-service';
 
 import './planets-list.scss';
 
-export const getPlanetList = async ({
-  search,
-  page,
+export const planetListLoader = async ({
+  request,
 }: {
-  search: string;
-  page: number;
-}): Promise<ResponseType> => {
-  return search === ''
-    ? await SwapiService.getAllPlanets(page)
-    : await SwapiService.searchPlanetByName(search, page);
+  request: Request;
+}): Promise<DeferredData | null> => {
+  const url = new URL(request.url);
+  const search = url.searchParams.get('search') || '';
+  const page = url.searchParams.has('page')
+    ? +url.searchParams.get('page')!
+    : 1;
+  try {
+    const res =
+      search === ''
+        ? await SwapiService.getAllPlanets(page)
+        : await SwapiService.searchPlanetByName(search, page);
+    return defer({ res });
+  } catch {
+    return Promise.resolve(null);
+  }
 };
 
 const PlanetsList = (props: {

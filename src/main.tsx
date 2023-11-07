@@ -1,13 +1,38 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import {
+  Route,
+  createBrowserRouter,
+  createRoutesFromElements,
+  RouterProvider,
+} from 'react-router-dom';
+
 import App from './components/app';
-import './index.css';
 import ErrorBoundary from './components/error-boundary';
+import PlanetDescription from './components/planet-description';
+import Page404 from './components/404';
+
+import { planetListLoader } from './components/planets-list';
+
+import './index.css';
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route
+      path="/"
+      element={<App />}
+      errorElement={<Page404 />}
+      loader={planetListLoader}
+    >
+      <Route path="/planets/:name" element={<PlanetDescription />} />
+    </Route>
+  )
+);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <App />
+      <RouterProvider router={router} />
     </ErrorBoundary>
   </React.StrictMode>
 );

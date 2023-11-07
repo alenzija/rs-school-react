@@ -1,60 +1,48 @@
-import { ReactNode } from 'react';
+import { ReactNode, Suspense } from 'react';
+import { Await, Outlet, useLoaderData, useNavigation } from 'react-router-dom';
 
-import {
-  Route,
-  createBrowserRouter,
-  createRoutesFromElements,
-  RouterProvider,
-  defer,
-} from 'react-router-dom';
+import SearchForm from '../search-form';
+import Pagination from '../pagination';
+import PlanetsList from '../planets-list';
+import Spinner from '../spinner';
+import ErrorMessage from '../error-message';
 
-import Layout from '../layout';
-import PlanetDescription from '../planet-description';
-import Page404 from '../404';
-
-import { getPlanetList } from '../planets-list';
-import { DeferredData } from '@remix-run/router/dist/utils';
+import ResponseType from '../../types/response-type';
 
 import './app.scss';
 
-const planetListLoader = async ({
-  request,
-}: {
-  request: Request;
-}): Promise<DeferredData | null> => {
-  const url = new URL(request.url);
-  const search = url.searchParams.get('search') || '';
-  const page = url.searchParams.has('page')
-    ? +url.searchParams.get('page')!
-    : 1;
-  try {
-    const res = await getPlanetList({ search, page });
-    console.log('LOADER >>>', { res });
-    if (!res) {
-      throw { status: 401 };
-    }
-    return defer({ res });
-  } catch (e) {
-    console.log('CATCH >>>', { e });
-    return Promise.resolve(null);
-  }
-};
-
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route
-      path="/"
-      element={<Layout />}
-      errorElement={<Page404 />}
-      loader={planetListLoader}
-    >
-      <Route path="/planets/:name" element={<PlanetDescription />} />
-    </Route>
-  )
-);
-
 const App = (): ReactNode => {
-  return <RouterProvider router={router} />;
+  const data = useLoaderData() as { res: ResponseType };
+  const { state } = useNavigation();
+
+  return (
+    <>
+      <div className="container">
+        <SearchForm loading={state === 'loading'} />
+        <Suspense fallback={<Spinner />}>
+          <Await resolve={data?.res}>
+            {(response) =>
+              !response ? (
+                <ErrorMessage />
+              ) : (
+                <>
+                  <PlanetsList
+                    planets={response.planets}
+                    loading={state === 'loading'}
+                  />
+                  <Pagination
+                    loading={state === 'loading'}
+                    hasNextPage={response.nextPage}
+                  />
+                </>
+              )
+            }
+          </Await>
+        </Suspense>
+      </div>
+      <Outlet />
+    </>
+  );
 };
 
 export default App;
