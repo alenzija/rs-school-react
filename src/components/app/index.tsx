@@ -1,4 +1,4 @@
-import { ReactNode, Suspense, memo } from 'react';
+import { Suspense, memo } from 'react';
 import { Await, Outlet, useLoaderData } from 'react-router-dom';
 
 import SearchForm from '../search-form';
@@ -11,11 +11,12 @@ import ResponseType from '../../types/response-type';
 
 import './app.scss';
 
-const App = (): ReactNode => {
+const App = () => {
   const data = useLoaderData() as { res: ResponseType };
   return (
     <>
       <div className="container">
+        <h1>Planets</h1>
         <SearchForm />
         <Suspense fallback={<Spinner />}>
           <Await resolve={data.res}>

@@ -18,7 +18,7 @@ import { planetListLoader } from './components/planets-list';
 
 import './index.css';
 
-const router = createBrowserRouter(
+export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
       path="/"
