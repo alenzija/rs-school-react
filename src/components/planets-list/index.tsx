@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { defer, useParams } from 'react-router-dom';
+import { defer, useNavigation, useParams } from 'react-router-dom';
 
 import { IPlanet } from '../../types/planet';
 import { DeferredData } from '@remix-run/router/dist/utils';
@@ -15,31 +15,23 @@ export const planetListLoader = async ({
   request,
 }: {
   request: Request;
-}): Promise<DeferredData | null> => {
+}): Promise<DeferredData> => {
   const url = new URL(request.url);
   const search = url.searchParams.get('search') || '';
   const page = url.searchParams.has('page')
     ? +url.searchParams.get('page')!
     : 1;
-  try {
-    const res =
-      search === ''
-        ? SwapiService.getAllPlanets(page)
-        : SwapiService.searchPlanetByName(search, page);
-    return defer({ res });
-  } catch {
-    return Promise.resolve(null);
-  }
+  const res =
+    search === ''
+      ? SwapiService.getAllPlanets(page)
+      : SwapiService.searchPlanetByName(search, page);
+  return defer({ res });
 };
 
-const PlanetsList = (props: {
-  planets: IPlanet[];
-  loading: boolean;
-}): ReactNode => {
-  const { planets, loading } = props;
-
-  const spinner = loading ? <Spinner /> : null;
-  const content = !loading ? <View planets={planets} /> : null;
+const PlanetsList = ({ planets }: { planets: IPlanet[] }): ReactNode => {
+  const { state } = useNavigation();
+  const spinner = state === 'loading' ? <Spinner /> : null;
+  const content = state === 'idle' ? <View planets={planets} /> : null;
 
   return (
     <>

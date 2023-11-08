@@ -1,20 +1,18 @@
 import { ReactNode } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigation, useSearchParams } from 'react-router-dom';
 
 import './pagination.scss';
 
 type PaginationProps = {
   hasNextPage: boolean;
-  loading: boolean;
 };
 
-const Pagination = (props: PaginationProps): ReactNode => {
+const Pagination = ({ hasNextPage }: PaginationProps): ReactNode => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { state } = useNavigation();
 
   const hasPage = searchParams.get('page');
   const page = hasPage ? +hasPage : 1;
-
-  const { hasNextPage, loading } = props;
 
   const toPrevPage = () => {
     const newSearchParams = { ...searchParams, page: `${page - 1}` };
@@ -28,11 +26,14 @@ const Pagination = (props: PaginationProps): ReactNode => {
 
   return (
     <div className="pagination">
-      <button disabled={page === 1 || loading} onClick={toPrevPage}>
+      <button disabled={page === 1 || state === 'loading'} onClick={toPrevPage}>
         {'<'}
       </button>
       <button disabled={true}>{page}</button>
-      <button disabled={!hasNextPage || loading} onClick={toNextPage}>
+      <button
+        disabled={!hasNextPage || state === 'loading'}
+        onClick={toNextPage}
+      >
         {'>'}
       </button>
     </div>

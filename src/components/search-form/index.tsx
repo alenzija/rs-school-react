@@ -1,12 +1,13 @@
 import { ReactNode, useRef, useState, ChangeEvent, FormEvent } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigation, useSearchParams } from 'react-router-dom';
 
 import './seacrh-form.scss';
 
-const SearchForm = (props: { loading: boolean }): ReactNode => {
+const SearchForm = (): ReactNode => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const [value, setValue] = useState('');
+  const { state } = useNavigation();
 
   const searchPhrase = localStorage.getItem('searchPhrase');
   if (searchPhrase) {
@@ -37,8 +38,6 @@ const SearchForm = (props: { loading: boolean }): ReactNode => {
     setSearchParams({ ...searchParams, search: newSearchPhrase });
   };
 
-  const { loading } = props;
-
   return (
     <form className="search-form" onSubmit={handleSubmit}>
       <input
@@ -48,7 +47,7 @@ const SearchForm = (props: { loading: boolean }): ReactNode => {
         onChange={handleChange}
         placeholder="Enter a planet name"
       />
-      <button type="submit" disabled={loading}>
+      <button type="submit" disabled={state === 'loading'}>
         Search
       </button>
     </form>

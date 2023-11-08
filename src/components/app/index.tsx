@@ -1,5 +1,5 @@
 import { ReactNode, Suspense, memo } from 'react';
-import { Await, Outlet, useLoaderData, useNavigation } from 'react-router-dom';
+import { Await, Outlet, useLoaderData } from 'react-router-dom';
 
 import SearchForm from '../search-form';
 import Pagination from '../pagination';
@@ -13,30 +13,22 @@ import './app.scss';
 
 const App = (): ReactNode => {
   const data = useLoaderData() as { res: ResponseType };
-  const { state } = useNavigation();
-
   return (
     <>
       <div className="container">
-        <SearchForm loading={state === 'loading'} />
+        <SearchForm />
         <Suspense fallback={<Spinner />}>
-          <Await resolve={data?.res}>
-            {(response) =>
-              !response ? (
+          <Await resolve={data.res}>
+            {(response) => {
+              return !response ? (
                 <ErrorMessage />
               ) : (
                 <>
-                  <PlanetsList
-                    planets={response.planets}
-                    loading={state === 'loading'}
-                  />
-                  <Pagination
-                    loading={state === 'loading'}
-                    hasNextPage={response.nextPage}
-                  />
+                  <PlanetsList planets={response.planets} />
+                  <Pagination hasNextPage={response.nextPage} />
                 </>
-              )
-            }
+              );
+            }}
           </Await>
         </Suspense>
       </div>

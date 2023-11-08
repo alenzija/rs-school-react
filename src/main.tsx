@@ -25,10 +25,6 @@ const router = createBrowserRouter(
       element={<App />}
       errorElement={<Page404 />}
       loader={planetListLoader}
-      // shouldRevalidate={(params) => {
-      //   console.warn('shouldRevalidate >>>', params);
-      //   return false;
-      // }}
     >
       <Route
         path="/planets/:name"
