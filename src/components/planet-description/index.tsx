@@ -1,11 +1,11 @@
 import { ReactNode, Suspense } from 'react';
 import {
   useLocation,
-  useNavigate,
   Params,
   defer,
   useLoaderData,
   Await,
+  redirect,
 } from 'react-router-dom';
 
 import Spinner from '../spinner';
@@ -25,6 +25,7 @@ export const planetDescriptionLoader = async ({
 }: {
   params: Params;
 }): Promise<DeferredData | undefined> => {
+  console.log(params);
   const { name } = params;
   if (!name) {
     return;
@@ -57,7 +58,6 @@ const PlanetDescription = (): ReactNode => {
 };
 
 const View = (props: { data: IPlanetDescription }): ReactNode => {
-  const navigate = useNavigate();
   const location = useLocation();
 
   const queryParams = new URLSearchParams(location.search);
@@ -70,7 +70,7 @@ const View = (props: { data: IPlanetDescription }): ReactNode => {
       <div
         className="close-button"
         onClick={() => {
-          navigate(`/?${queryParams.toString()}`);
+          redirect(`/?${queryParams.toString()}`);
         }}
       >
         <img className="close-button__img" src={closeImg} alt="close image" />

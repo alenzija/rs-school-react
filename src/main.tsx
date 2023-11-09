@@ -14,7 +14,7 @@ import PlanetDescription, {
 } from './components/planet-description';
 import Page404 from './components/404';
 
-import { planetListLoader } from './components/planets-list';
+//import { planetListLoader } from './components/planets-list';
 
 import './index.css';
 
@@ -24,7 +24,7 @@ export const router = createBrowserRouter(
       path="/"
       element={<App />}
       errorElement={<Page404 />}
-      loader={planetListLoader}
+      // loader={planetListLoader}
     >
       <Route
         path="/planets/:name"

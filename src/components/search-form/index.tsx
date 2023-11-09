@@ -1,18 +1,23 @@
-import { ReactNode, useRef, useState, ChangeEvent, FormEvent } from 'react';
-import { useNavigation, useSearchParams } from 'react-router-dom';
+import {
+  ReactNode,
+  useRef,
+  useState,
+  ChangeEvent,
+  FormEvent,
+  useContext,
+} from 'react';
+import { useNavigation } from 'react-router-dom';
+
+import SearchContext from '../../context';
 
 import './seacrh-form.scss';
 
 const SearchForm = (): ReactNode => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [value, setValue] = useState('');
+  // const [searchParams, setSearchParams] = useSearchParams();
   const { state } = useNavigation();
-
-  const searchPhrase = localStorage.getItem('searchPhrase');
-  if (searchPhrase) {
-    searchParams.set('search', searchPhrase);
-  }
+  const searchContext = useContext(SearchContext);
+  const [value, setValue] = useState(searchContext.searchPhrase);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const target = e.target;
@@ -24,18 +29,21 @@ const SearchForm = (): ReactNode => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    let newSearchPhrase: string | null = inputRef.current?.value.trim() || '';
-    if (newSearchPhrase === '') {
-      newSearchPhrase = null;
-      localStorage.removeItem('searchPhrase');
-      searchParams.delete('search');
+    const newSearchPhrase: string = inputRef.current?.value.trim() || '';
+    // if (newSearchPhrase === '') {
+    //   newSearchPhrase = null;
+    //   localStorage.removeItem('searchPhrase');
+    //   searchParams.delete('search');
+    //   return;
+    // }
+    if (newSearchPhrase === searchContext.searchPhrase) {
       return;
     }
-    if (newSearchPhrase === searchPhrase) {
-      return;
-    }
+    // if (newSearchPhrase !== '') {
+    //   setSearchParams({ ...searchParams, search: newSearchPhrase });
+    // }
     localStorage.setItem('searchPhrase', newSearchPhrase);
-    setSearchParams({ ...searchParams, search: newSearchPhrase });
+    searchContext.setSearchPhrase(newSearchPhrase);
   };
 
   return (

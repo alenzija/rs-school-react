@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { defer, useNavigation, useParams } from 'react-router-dom';
+import { ReactNode, useContext, useEffect, useMemo, useState } from 'react';
+import { defer, useLocation, useParams } from 'react-router-dom';
 
 import { IPlanet } from '../../types/planet';
 import { DeferredData } from '@remix-run/router/dist/utils';
@@ -10,6 +10,9 @@ import PlanetsItem from '../planets-item';
 import SwapiService from '../../services/swapi-service';
 
 import './planets-list.scss';
+import SearchContext from '../../context';
+import ErrorMessage from '../error-message';
+import NavigationState from '../../types/navigation-state';
 
 export const planetListLoader = async ({
   request,
@@ -28,13 +31,44 @@ export const planetListLoader = async ({
   return defer({ res });
 };
 
-const PlanetsList = ({ planets }: { planets: IPlanet[] }): ReactNode => {
-  const { state } = useNavigation();
+const PlanetsList = () // { planets }: { planets: IPlanet[] }
+: ReactNode => {
+  const [planets, setPlanets] = useState<IPlanet[]>([]);
+  const [error, setError] = useState(false);
+  const [state, setState] = useState<NavigationState>('loading');
+  const location = useLocation();
+  const searchContext = useContext(SearchContext);
+
+  const queryParams = useMemo(
+    () => new URLSearchParams(location.search),
+    [location.search]
+  );
+
+  useEffect(() => {
+    setError(false);
+    setState('loading');
+    const page = queryParams.has('page') ? +queryParams.get('page')! : 1;
+    if (searchContext.searchPhrase === '') {
+      SwapiService.getAllPlanets(page)
+        .then((res) => setPlanets(res.planets))
+        .catch(() => setError(true))
+        .finally(() => setState('idle'));
+    } else {
+      SwapiService.searchPlanetByName(searchContext.searchPhrase, page)
+        .then((res) => setPlanets(res.planets))
+        .catch(() => setError(true))
+        .finally(() => setState('idle'));
+    }
+  }, [queryParams, searchContext]);
+
+  const errorMessage = error ? <ErrorMessage /> : null;
   const spinner = state === 'loading' ? <Spinner /> : null;
-  const content = state === 'idle' ? <View planets={planets} /> : null;
+  const content =
+    state === 'idle' && !error ? <View planets={planets} /> : null;
 
   return (
     <>
+      {errorMessage}
       {spinner}
       {content}
     </>
