@@ -1,15 +1,17 @@
-import { ReactNode } from 'react';
+import { ReactNode, useContext } from 'react';
 import { useNavigation, useSearchParams } from 'react-router-dom';
 
 import './pagination.scss';
+import AppContext from '../../context';
 
-type PaginationProps = {
-  hasNextPage: boolean;
-};
+// type PaginationProps = {
+//   hasNextPage: boolean;
+// };
 
-const Pagination = ({ hasNextPage }: PaginationProps): ReactNode => {
+const Pagination = (): ReactNode => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { state } = useNavigation();
+  const appContext = useContext(AppContext);
 
   const hasPage = searchParams.get('page');
   const page = hasPage ? +hasPage : 1;
@@ -31,7 +33,7 @@ const Pagination = ({ hasNextPage }: PaginationProps): ReactNode => {
       </button>
       <button disabled={true}>{page}</button>
       <button
-        disabled={!hasNextPage || state === 'loading'}
+        disabled={!appContext.planetsData.nextPage || state === 'loading'}
         onClick={toNextPage}
       >
         {'>'}

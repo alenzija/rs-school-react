@@ -10,9 +10,10 @@ import PlanetsItem from '../planets-item';
 import SwapiService from '../../services/swapi-service';
 
 import './planets-list.scss';
-import SearchContext from '../../context';
+
 import ErrorMessage from '../error-message';
 import NavigationState from '../../types/navigation-state';
+import AppContext from '../../context';
 
 export const planetListLoader = async ({
   request,
@@ -33,11 +34,10 @@ export const planetListLoader = async ({
 
 const PlanetsList = () // { planets }: { planets: IPlanet[] }
 : ReactNode => {
-  const [planets, setPlanets] = useState<IPlanet[]>([]);
   const [error, setError] = useState(false);
   const [state, setState] = useState<NavigationState>('loading');
   const location = useLocation();
-  const searchContext = useContext(SearchContext);
+  const appContext = useContext(AppContext);
 
   const queryParams = useMemo(
     () => new URLSearchParams(location.search),
@@ -48,23 +48,25 @@ const PlanetsList = () // { planets }: { planets: IPlanet[] }
     setError(false);
     setState('loading');
     const page = queryParams.has('page') ? +queryParams.get('page')! : 1;
-    if (searchContext.searchPhrase === '') {
+    if (appContext.searchPhrase === '') {
       SwapiService.getAllPlanets(page)
-        .then((res) => setPlanets(res.planets))
+        .then((res) => appContext.changePlanetsData(res))
         .catch(() => setError(true))
         .finally(() => setState('idle'));
     } else {
-      SwapiService.searchPlanetByName(searchContext.searchPhrase, page)
-        .then((res) => setPlanets(res.planets))
+      SwapiService.searchPlanetByName(appContext.searchPhrase, page)
+        .then((res) => appContext.changePlanetsData(res))
         .catch(() => setError(true))
         .finally(() => setState('idle'));
     }
-  }, [queryParams, searchContext]);
+  }, [queryParams, appContext.searchPhrase]);
 
   const errorMessage = error ? <ErrorMessage /> : null;
   const spinner = state === 'loading' ? <Spinner /> : null;
   const content =
-    state === 'idle' && !error ? <View planets={planets} /> : null;
+    state === 'idle' && !error ? (
+      <View planets={appContext.planetsData.planets} />
+    ) : null;
 
   return (
     <>

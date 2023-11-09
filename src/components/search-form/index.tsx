@@ -6,7 +6,7 @@ import {
   FormEvent,
   useContext,
 } from 'react';
-import { useNavigation } from 'react-router-dom';
+import { useLocation, useNavigate, useNavigation } from 'react-router-dom';
 
 import SearchContext from '../../context';
 
@@ -18,6 +18,11 @@ const SearchForm = (): ReactNode => {
   const { state } = useNavigation();
   const searchContext = useContext(SearchContext);
   const [value, setValue] = useState(searchContext.searchPhrase);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const queryParams = new URLSearchParams(location.search);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const target = e.target;
@@ -42,8 +47,10 @@ const SearchForm = (): ReactNode => {
     // if (newSearchPhrase !== '') {
     //   setSearchParams({ ...searchParams, search: newSearchPhrase });
     // }
+    queryParams.set('page', '1');
+    navigate(`/?${queryParams.toString()}`);
     localStorage.setItem('searchPhrase', newSearchPhrase);
-    searchContext.setSearchPhrase(newSearchPhrase);
+    searchContext.changeSearchPhrase(newSearchPhrase);
   };
 
   return (
