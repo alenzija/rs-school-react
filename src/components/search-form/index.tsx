@@ -41,7 +41,7 @@ export const SearchForm = () => {
     //   setSearchParams({ ...searchParams, search: newSearchPhrase });
     // }
     searchParams.set('page', '1');
-    setSearchParams({ ...searchParams, search: newSearchPhrase });
+    setSearchParams(searchParams);
     localStorage.setItem('searchPhrase', newSearchPhrase);
     changeSearchPhrase(newSearchPhrase);
   };

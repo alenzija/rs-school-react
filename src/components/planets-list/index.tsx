@@ -12,6 +12,8 @@ import { AppContext } from '../../context';
 
 import { SwapiService } from '../../services/swapi-service';
 
+import { SHORT_PLANETS_FIELDS } from '../../consts';
+
 import './planets-list.scss';
 
 export const planetListLoader = async ({
@@ -58,7 +60,7 @@ export const PlanetsList = () => {
         .catch(() => setError(true))
         .finally(() => setState('idle'));
     }
-  }, [queryParams, searchPhrase]);
+  }, [queryParams, searchPhrase, changePlanetsData]);
 
   const errorMessage = error ? <ErrorMessage /> : null;
   const spinner = state === 'loading' ? <Spinner /> : null;
@@ -101,7 +103,7 @@ const View: React.FC<{ planets: IPlanet[] }> = ({ planets }) => {
         >
           <Planet
             planet={planet}
-            useFields={['name', 'climate', 'terrain']}
+            usedFields={SHORT_PLANETS_FIELDS}
             // name={planet.name}
             // climate={planet.climate}
             // terrain={planet.terrain}

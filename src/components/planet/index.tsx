@@ -5,10 +5,10 @@ import './planet.scss';
 
 interface PlanetProps {
   planet: IPlanet;
-  useFields: string[];
+  usedFields: string[];
 }
 
-export const Planet: React.FC<PlanetProps> = ({ planet, useFields }) => {
+export const Planet: React.FC<PlanetProps> = ({ planet, usedFields }) => {
   // const navigate = useNavigate();
   // const location = useLocation();
 
@@ -17,7 +17,7 @@ export const Planet: React.FC<PlanetProps> = ({ planet, useFields }) => {
   // const { name, climate, terrain, active } = props;
   return (
     <>
-      {useFields.map((field, index) => {
+      {usedFields.map((field, index) => {
         return (
           <div className="planet" key={index}>
             <span className="planet--title">{field}:</span>{' '}

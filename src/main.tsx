@@ -9,10 +9,7 @@ import {
 
 import { App } from './components/app';
 import { ErrorBoundary } from './components/error-boundary';
-import {
-  PlanetDescription,
-  planetDescriptionLoader,
-} from './components/planet-description';
+import { LeftSidePanel, getPlanetLoader } from './components/left-side-panel';
 import { Page404 } from './components/404';
 
 //import { planetListLoader } from './components/planets-list';
@@ -29,8 +26,8 @@ export const router = createBrowserRouter(
     >
       <Route
         path="/planets/:name"
-        element={<PlanetDescription />}
-        loader={planetDescriptionLoader}
+        element={<LeftSidePanel />}
+        loader={getPlanetLoader}
       />
     </Route>
   )

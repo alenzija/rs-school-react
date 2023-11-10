@@ -19,9 +19,11 @@ import { DeferredData } from '@remix-run/router/dist/utils';
 
 import closeImg from '../../assets/image/close.png';
 
+import { FULL_PLANETS_FIELDS } from '../../consts';
+
 import './planet-description.scss';
 
-export const planetDescriptionLoader = async ({
+export const getPlanetLoader = async ({
   params,
 }: {
   params: Params;
@@ -34,14 +36,11 @@ export const planetDescriptionLoader = async ({
   return defer({ res });
 };
 
-export const PlanetDescription = () => {
+export const LeftSidePanel = () => {
   const data = useLoaderData() as { res: IPlanet };
 
   return (
-    <div
-      className="planet-description"
-      style={{ display: data ? 'block' : 'none' }}
-    >
+    <div className="left-panel" style={{ display: data ? 'block' : 'none' }}>
       <Suspense fallback={<Spinner />}>
         <Await resolve={data.res}>
           {(response) => {
@@ -59,15 +58,6 @@ const View: React.FC<{ data: IPlanet }> = ({ data }) => {
 
   const queryParams = new URLSearchParams(location.search);
 
-  const useFields = [
-    'name',
-    'climate',
-    'diameter',
-    'orbitalPeriod',
-    'population',
-    'terrain',
-  ];
-
   return (
     <>
       <div
@@ -78,7 +68,7 @@ const View: React.FC<{ data: IPlanet }> = ({ data }) => {
       >
         <img className="close-button__img" src={closeImg} alt="close image" />
       </div>
-      <Planet useFields={useFields} planet={data} />
+      <Planet usedFields={FULL_PLANETS_FIELDS} planet={data} />
     </>
   );
 };
