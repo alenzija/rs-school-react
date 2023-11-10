@@ -1,19 +1,21 @@
 import { createContext } from 'react';
-import ResponseType from './types/response-type';
+
+import { ResponseType } from './types/response-type';
 import { IPlanet } from './types/planet';
 
-const AppContext = createContext({
+interface IAppContext {
+  searchPhrase: string;
+  planetsData: ResponseType;
+  changeSearchPhrase: (value: string) => void;
+  changePlanetsData: (value: ResponseType) => void;
+}
+
+export const AppContext = createContext<IAppContext>({
   searchPhrase: '',
   planetsData: {
     planets: [] as IPlanet[],
     nextPage: false,
   },
-  changeSearchPhrase: (value: string): void => {
-    console.log(value);
-  },
-  changePlanetsData: (value: ResponseType): void => {
-    console.log(value);
-  },
+  changeSearchPhrase: () => {},
+  changePlanetsData: () => {},
 });
-
-export default AppContext;

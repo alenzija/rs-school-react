@@ -1,3 +1,1 @@
-type NavigationState = 'loading' | 'idle';
-
-export default NavigationState;
+export type NavigationState = 'loading' | 'idle';

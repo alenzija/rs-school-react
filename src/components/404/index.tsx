@@ -1,11 +1,10 @@
-import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
 import errorImg from './error.png';
 
 import './404.scss';
 
-const Page404 = (): ReactNode => {
+export const Page404 = () => {
   return (
     <div className="not-found-page">
       <img src={errorImg} alt="404 not found" />
@@ -13,5 +12,3 @@ const Page404 = (): ReactNode => {
     </div>
   );
 };
-
-export default Page404;

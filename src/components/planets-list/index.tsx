@@ -1,19 +1,18 @@
-import { ReactNode, useContext, useEffect, useMemo, useState } from 'react';
-import { defer, useLocation, useParams } from 'react-router-dom';
+import { useContext, useEffect, useMemo, useState } from 'react';
+import { defer, useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import { IPlanet } from '../../types/planet';
+import { IPlanet, NavigationState } from '../../types';
 import { DeferredData } from '@remix-run/router/dist/utils';
 
-import Spinner from '../spinner';
-import PlanetsItem from '../planets-item';
+import { Spinner } from '../spinner';
+import { ErrorMessage } from '../error-message';
+import { Planet } from '../planet';
 
-import SwapiService from '../../services/swapi-service';
+import { AppContext } from '../../context';
+
+import { SwapiService } from '../../services/swapi-service';
 
 import './planets-list.scss';
-
-import ErrorMessage from '../error-message';
-import NavigationState from '../../types/navigation-state';
-import AppContext from '../../context';
 
 export const planetListLoader = async ({
   request,
@@ -32,12 +31,12 @@ export const planetListLoader = async ({
   return defer({ res });
 };
 
-const PlanetsList = () // { planets }: { planets: IPlanet[] }
-: ReactNode => {
+export const PlanetsList = () => {
   const [error, setError] = useState(false);
   const [state, setState] = useState<NavigationState>('loading');
   const location = useLocation();
-  const appContext = useContext(AppContext);
+  const { searchPhrase, planetsData, changePlanetsData } =
+    useContext(AppContext);
 
   const queryParams = useMemo(
     () => new URLSearchParams(location.search),
@@ -48,25 +47,23 @@ const PlanetsList = () // { planets }: { planets: IPlanet[] }
     setError(false);
     setState('loading');
     const page = queryParams.has('page') ? +queryParams.get('page')! : 1;
-    if (appContext.searchPhrase === '') {
+    if (searchPhrase === '') {
       SwapiService.getAllPlanets(page)
-        .then((res) => appContext.changePlanetsData(res))
+        .then((res) => changePlanetsData(res))
         .catch(() => setError(true))
         .finally(() => setState('idle'));
     } else {
-      SwapiService.searchPlanetByName(appContext.searchPhrase, page)
-        .then((res) => appContext.changePlanetsData(res))
+      SwapiService.searchPlanetByName(searchPhrase, page)
+        .then((res) => changePlanetsData(res))
         .catch(() => setError(true))
         .finally(() => setState('idle'));
     }
-  }, [queryParams, appContext.searchPhrase]);
+  }, [queryParams, searchPhrase]);
 
   const errorMessage = error ? <ErrorMessage /> : null;
   const spinner = state === 'loading' ? <Spinner /> : null;
   const content =
-    state === 'idle' && !error ? (
-      <View planets={appContext.planetsData.planets} />
-    ) : null;
+    state === 'idle' && !error ? <View planets={planetsData.planets} /> : null;
 
   return (
     <>
@@ -77,26 +74,40 @@ const PlanetsList = () // { planets }: { planets: IPlanet[] }
   );
 };
 
-const View = (props: { planets: IPlanet[] }): ReactNode => {
+const View: React.FC<{ planets: IPlanet[] }> = ({ planets }) => {
   const params = useParams();
-  const { planets } = props;
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+
   if (planets.length === 0) {
     return <div>No planets</div>;
   }
-  const { name } = params;
+
   return (
     <div className="planets">
       {planets.map((planet) => (
-        <PlanetsItem
-          active={!!name && name === planet.name}
+        <div
           key={planet.name}
-          name={planet.name}
-          climate={planet.climate}
-          terrain={planet.terrain}
-        />
+          className={
+            planet.name === params.name
+              ? 'planets__card active'
+              : 'planets__card'
+          }
+          onClick={() => {
+            navigate(`/planets/${planet.name}/?${queryParams.toString()}`);
+          }}
+        >
+          <Planet
+            planet={planet}
+            useFields={['name', 'climate', 'terrain']}
+            // name={planet.name}
+            // climate={planet.climate}
+            // terrain={planet.terrain}
+          />
+        </div>
       ))}
     </div>
   );
 };
-
-export default PlanetsList;

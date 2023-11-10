@@ -1,14 +1,15 @@
-import { ReactNode, useContext } from 'react';
+import { useContext } from 'react';
 import { useNavigation, useSearchParams } from 'react-router-dom';
 
+import { AppContext } from '../../context';
+
 import './pagination.scss';
-import AppContext from '../../context';
 
 // type PaginationProps = {
 //   hasNextPage: boolean;
 // };
 
-const Pagination = (): ReactNode => {
+export const Pagination = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { state } = useNavigation();
   const appContext = useContext(AppContext);
@@ -41,5 +42,3 @@ const Pagination = (): ReactNode => {
     </div>
   );
 };
-
-export default Pagination;

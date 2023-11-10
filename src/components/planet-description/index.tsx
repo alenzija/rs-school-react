@@ -1,4 +1,4 @@
-import { ReactNode, Suspense } from 'react';
+import { Suspense } from 'react';
 import {
   useLocation,
   Params,
@@ -8,12 +8,13 @@ import {
   useNavigate,
 } from 'react-router-dom';
 
-import Spinner from '../spinner';
-import ErrorMessage from '../error-message';
+import { Spinner } from '../spinner';
+import { ErrorMessage } from '../error-message';
+import { Planet } from '../planet';
 
-import SwapiService from '../../services/swapi-service';
+import { SwapiService } from '../../services/swapi-service';
 
-import { IPlanetDescription } from '../../types/planet';
+import { IPlanet } from '../../types';
 import { DeferredData } from '@remix-run/router/dist/utils';
 
 import closeImg from '../../assets/image/close.png';
@@ -33,8 +34,8 @@ export const planetDescriptionLoader = async ({
   return defer({ res });
 };
 
-const PlanetDescription = (): ReactNode => {
-  const data = useLoaderData() as { res: IPlanetDescription };
+export const PlanetDescription = () => {
+  const data = useLoaderData() as { res: IPlanet };
 
   return (
     <div
@@ -44,11 +45,7 @@ const PlanetDescription = (): ReactNode => {
       <Suspense fallback={<Spinner />}>
         <Await resolve={data.res}>
           {(response) => {
-            return !response ? (
-              <ErrorMessage />
-            ) : (
-              <View data={response} key={response.name} />
-            );
+            return !response ? <ErrorMessage /> : <View data={response} />;
           }}
         </Await>
       </Suspense>
@@ -56,14 +53,20 @@ const PlanetDescription = (): ReactNode => {
   );
 };
 
-const View = (props: { data: IPlanetDescription }): ReactNode => {
+const View: React.FC<{ data: IPlanet }> = ({ data }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const queryParams = new URLSearchParams(location.search);
 
-  const { name, climate, diameter, orbitalPeriod, population, terrain } =
-    props.data;
+  const useFields = [
+    'name',
+    'climate',
+    'diameter',
+    'orbitalPeriod',
+    'population',
+    'terrain',
+  ];
 
   return (
     <>
@@ -75,32 +78,7 @@ const View = (props: { data: IPlanetDescription }): ReactNode => {
       >
         <img className="close-button__img" src={closeImg} alt="close image" />
       </div>
-      <div className="planet__item">
-        <span className="planet__item--title">Name: </span>
-        {name}
-      </div>
-      <div className="planet__item">
-        <span className="planet__item--title">Climate: </span>
-        {climate}
-      </div>
-      <div className="planet__item">
-        <span className="planet__item--title">Diametr: </span>
-        {diameter}
-      </div>
-      <div className="planet__item">
-        <span className="planet__item--title">Orbital period: </span>
-        {orbitalPeriod}
-      </div>
-      <div className="planet__item">
-        <span className="planet__item--title">Population: </span>
-        {population}
-      </div>
-      <div className="planet__item">
-        <span className="planet__item--title">Terrain: </span>
-        {terrain}
-      </div>
+      <Planet useFields={useFields} planet={data} />
     </>
   );
 };
-
-export default PlanetDescription;

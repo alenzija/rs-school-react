@@ -1,0 +1,10 @@
+.planet {
+  padding: 5px;
+
+  &--title {
+    display: inline-block;
+    min-width: 90px;
+    width: max-content;
+    color: #000000;
+  }
+}

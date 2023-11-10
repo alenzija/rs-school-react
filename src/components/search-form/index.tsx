@@ -1,28 +1,21 @@
-import {
-  ReactNode,
-  useRef,
-  useState,
-  ChangeEvent,
-  FormEvent,
-  useContext,
-} from 'react';
-import { useLocation, useNavigate, useNavigation } from 'react-router-dom';
+import { useRef, useState, ChangeEvent, FormEvent, useContext } from 'react';
+import { useSearchParams, useNavigation } from 'react-router-dom';
 
-import SearchContext from '../../context';
+import { AppContext } from '../../context';
 
 import './seacrh-form.scss';
 
-const SearchForm = (): ReactNode => {
+export const SearchForm = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-  // const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { state } = useNavigation();
-  const searchContext = useContext(SearchContext);
-  const [value, setValue] = useState(searchContext.searchPhrase);
+  const { searchPhrase, changeSearchPhrase } = useContext(AppContext);
+  const [value, setValue] = useState(searchPhrase);
 
-  const location = useLocation();
-  const navigate = useNavigate();
+  //const location = useLocation();
+  //const navigate = useNavigate();
 
-  const queryParams = new URLSearchParams(location.search);
+  // const queryParams = new URLSearchParams(location.search);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const target = e.target;
@@ -41,16 +34,16 @@ const SearchForm = (): ReactNode => {
     //   searchParams.delete('search');
     //   return;
     // }
-    if (newSearchPhrase === searchContext.searchPhrase) {
+    if (newSearchPhrase === searchPhrase) {
       return;
     }
     // if (newSearchPhrase !== '') {
     //   setSearchParams({ ...searchParams, search: newSearchPhrase });
     // }
-    queryParams.set('page', '1');
-    navigate(`/?${queryParams.toString()}`);
+    searchParams.set('page', '1');
+    setSearchParams({ ...searchParams, search: newSearchPhrase });
     localStorage.setItem('searchPhrase', newSearchPhrase);
-    searchContext.changeSearchPhrase(newSearchPhrase);
+    changeSearchPhrase(newSearchPhrase);
   };
 
   return (
@@ -68,5 +61,3 @@ const SearchForm = (): ReactNode => {
     </form>
   );
 };
-
-export default SearchForm;

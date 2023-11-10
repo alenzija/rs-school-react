@@ -1,6 +1,4 @@
-import { ReactNode } from 'react';
-
-const Spinner = (): ReactNode => {
+export const Spinner = () => {
   return (
     <div className="spinner">
       <svg
@@ -260,5 +258,3 @@ const Spinner = (): ReactNode => {
     </div>
   );
 };
-
-export default Spinner;

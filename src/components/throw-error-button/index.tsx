@@ -1,8 +1,8 @@
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 
 import './throw-error-button.scss';
 
-const ThrowErrorButton = (): ReactNode => {
+export const ThrowErrorButton = () => {
   const [throwError, setThrowError] = useState(false);
 
   const handleError = (): void => {
@@ -18,5 +18,3 @@ const ThrowErrorButton = (): ReactNode => {
     </button>
   );
 };
-
-export default ThrowErrorButton;

@@ -1,19 +1,19 @@
-import { memo, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
-import SearchForm from '../search-form';
-import Pagination from '../pagination';
-import PlanetsList from '../planets-list';
+import { SearchForm } from '../search-form';
+import { Pagination } from '../pagination';
+import { PlanetsList } from '../planets-list';
 // import Spinner from '../spinner';
 // import ErrorMessage from '../error-message';
 
-import ResponseType from '../../types/response-type';
+import { ResponseType } from '../../types';
 
-import SearchContext from '../../context';
+import { AppContext } from '../../context';
 
 import './app.scss';
 
-const App = () => {
+export const App = () => {
   // const data = useLoaderData() as { res: ResponseType };
   const [searchPhrase, setSearchPhrase] = useState(
     localStorage.getItem('searchPhrase') || ''
@@ -34,7 +34,7 @@ const App = () => {
   return (
     <>
       <div className="container">
-        <SearchContext.Provider
+        <AppContext.Provider
           value={{
             searchPhrase,
             changeSearchPhrase,
@@ -57,11 +57,9 @@ const App = () => {
               }}
             </Await>
           </Suspense> */}
-        </SearchContext.Provider>
+        </AppContext.Provider>
       </div>
       <Outlet />
     </>
   );
 };
-
-export default memo(App);

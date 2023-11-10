@@ -7,12 +7,13 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 
-import App from './components/app';
-import ErrorBoundary from './components/error-boundary';
-import PlanetDescription, {
+import { App } from './components/app';
+import { ErrorBoundary } from './components/error-boundary';
+import {
+  PlanetDescription,
   planetDescriptionLoader,
 } from './components/planet-description';
-import Page404 from './components/404';
+import { Page404 } from './components/404';
 
 //import { planetListLoader } from './components/planets-list';
 

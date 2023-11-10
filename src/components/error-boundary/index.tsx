@@ -1,8 +1,10 @@
-import { Component, ReactNode } from 'react';
+import { Component } from 'react';
 
-import ErrorMessage from '../error-message';
+import { ErrorMessage } from '../error-message';
 
-class ErrorBoundary extends Component<Readonly<{ children: ReactNode }>> {
+export class ErrorBoundary extends Component<
+  Readonly<{ children: JSX.Element }>
+> {
   state = {
     hasError: false,
   };
@@ -23,5 +25,3 @@ class ErrorBoundary extends Component<Readonly<{ children: ReactNode }>> {
     return this.props.children;
   }
 }
-
-export default ErrorBoundary;

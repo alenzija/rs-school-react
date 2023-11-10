@@ -1,26 +1,26 @@
-import { IPlanet, IPlanetDescription } from '../types/planet';
+import { IPlanet } from '../types';
 
-export default class SwapiService {
+export class SwapiService {
   private static baseURL = 'https://swapi.dev/api';
-  private static transfromPlanetsDataToPlanets(
-    data: Record<string, string>[]
-  ): IPlanet[] {
-    return data.map((result) => ({
-      name: result.name && result.name !== 'unknown' ? result.name : 'no name',
-      climate:
-        result.climate && result.climate !== 'unknown'
-          ? result.climate
-          : 'no climate',
-      terrain:
-        result.terrain && result.terrain !== 'unknown'
-          ? result.terrain
-          : 'no terrain',
-    }));
-  }
+  // private static transfromPlanetsDataToPlanets(
+  //   data: Record<string, string>[]
+  // ): IPlanet[] {
+  //   return data.map((result) => ({
+  //     name: result.name && result.name !== 'unknown' ? result.name : 'no name',
+  //     climate:
+  //       result.climate && result.climate !== 'unknown'
+  //         ? result.climate
+  //         : 'no climate',
+  //     terrain:
+  //       result.terrain && result.terrain !== 'unknown'
+  //         ? result.terrain
+  //         : 'no terrain',
+  //   }));
+  // }
 
-  private static transfromPlanetsDataToPlanetDescription(
+  private static transfromPlanetsDataToPlanet(
     data: Record<string, string>
-  ): IPlanetDescription {
+  ): IPlanet {
     return {
       name: data.name && data.name !== 'unknown' ? data.name : 'no name',
       population:
@@ -43,7 +43,6 @@ export default class SwapiService {
         data['orbital_period'] && data['orbital_period'] !== 'unknown'
           ? data['orbital_period']
           : 'no orbital period',
-      films: data.films && typeof data.films !== 'string' ? data.films : [],
     };
   }
 
@@ -56,7 +55,9 @@ export default class SwapiService {
     }
     const data = await res.json();
     return {
-      planets: this.transfromPlanetsDataToPlanets(data.results),
+      planets: data.results.map((item: Record<string, string>) =>
+        this.transfromPlanetsDataToPlanet(item)
+      ),
       nextPage: !!data.next,
     };
   }
@@ -73,20 +74,20 @@ export default class SwapiService {
     }
     const data = await res.json();
     return {
-      planets: this.transfromPlanetsDataToPlanets(data.results),
+      planets: data.results.map((item: Record<string, string>) =>
+        this.transfromPlanetsDataToPlanet(item)
+      ),
       nextPage: !!data.next,
     };
   }
 
-  public static async getPlanetByName(
-    name: string
-  ): Promise<IPlanetDescription> {
+  public static async getPlanetByName(name: string): Promise<IPlanet> {
     const res = await fetch(`${this.baseURL}/planets/?search=${name}`);
     if (!res.ok) {
       throw Error('Something went wrong!');
     }
     const data = await res.json();
-    return this.transfromPlanetsDataToPlanetDescription(data.results[0]);
+    return this.transfromPlanetsDataToPlanet(data.results[0]);
   }
 
   public static async getFilm(url: string): Promise<string | null> {
