@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 
-import SearchForm from './index';
+import { SearchForm } from './index';
 
 test('Test searchForm', async () => {
   act(() => {

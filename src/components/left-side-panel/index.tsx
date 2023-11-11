@@ -21,7 +21,7 @@ import closeImg from '../../assets/image/close.png';
 
 import { FULL_PLANETS_FIELDS } from '../../consts';
 
-import './planet-description.scss';
+import './left-side-panel.scss';
 
 export const getPlanetLoader = async ({
   params,

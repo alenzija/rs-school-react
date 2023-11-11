@@ -10,7 +10,7 @@
     "format:fix": "prettier ./src --write",
     "preview": "vite preview",
     "prepare": "husky install",
-    "test": "jest --coverage --collectCoverageFrom='./src/**'"
+    "test": "jest"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -22,6 +22,7 @@
     "@babel/preset-react": "^7.22.15",
     "@babel/preset-typescript": "^7.23.2",
     "@jest/globals": "^29.7.0",
+    "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^14.1.0",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",

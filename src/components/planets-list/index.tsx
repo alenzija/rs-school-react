@@ -37,6 +37,7 @@ export const PlanetsList = () => {
   const [error, setError] = useState(false);
   const [state, setState] = useState<NavigationState>('loading');
   const location = useLocation();
+
   const { searchPhrase, planetsData, changePlanetsData } =
     useContext(AppContext);
 
@@ -84,7 +85,7 @@ const View: React.FC<{ planets: IPlanet[] }> = ({ planets }) => {
   const queryParams = new URLSearchParams(location.search);
 
   if (planets.length === 0) {
-    return <div>No planets</div>;
+    return <>No planets</>;
   }
 
   return (
