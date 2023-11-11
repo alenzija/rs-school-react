@@ -1,20 +1,18 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { defer, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { defer, useLocation, useParams } from 'react-router-dom';
 
 import { IPlanet, NavigationState } from '../../types';
 import { DeferredData } from '@remix-run/router/dist/utils';
 
 import { Spinner } from '../spinner';
 import { ErrorMessage } from '../error-message';
-import { Planet } from '../planet';
 
 import { AppContext } from '../../context';
 
 import { SwapiService } from '../../services/swapi-service';
 
-import { SHORT_PLANETS_FIELDS } from '../../consts';
-
 import './planets-list.scss';
+import { PlanetCard } from '../planet-card';
 
 export const planetListLoader = async ({
   request,
@@ -79,37 +77,19 @@ export const PlanetsList = () => {
 
 const View: React.FC<{ planets: IPlanet[] }> = ({ planets }) => {
   const params = useParams();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const queryParams = new URLSearchParams(location.search);
 
   if (planets.length === 0) {
     return <>No planets</>;
   }
 
   return (
-    <div className="planets">
-      {planets.map((planet) => (
-        <div
-          key={planet.name}
-          className={
-            planet.name === params.name
-              ? 'planets__card active'
-              : 'planets__card'
-          }
-          onClick={() => {
-            navigate(`/planets/${planet.name}/?${queryParams.toString()}`);
-          }}
-        >
-          <Planet
-            planet={planet}
-            usedFields={SHORT_PLANETS_FIELDS}
-            // name={planet.name}
-            // climate={planet.climate}
-            // terrain={planet.terrain}
-          />
-        </div>
+    <div className="planets" role="planets-list">
+      {planets.map((planet, index) => (
+        <PlanetCard
+          planet={planet}
+          active={planet.name === params.name}
+          key={index}
+        />
       ))}
     </div>
   );

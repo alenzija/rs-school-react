@@ -40,7 +40,11 @@ export const LeftSidePanel = () => {
   const data = useLoaderData() as { res: IPlanet };
 
   return (
-    <div className="left-panel" style={{ display: data ? 'block' : 'none' }}>
+    <div
+      role="detailed-component"
+      className="left-panel"
+      style={{ display: data ? 'block' : 'none' }}
+    >
       <Suspense fallback={<Spinner />}>
         <Await resolve={data.res}>
           {(response) => {

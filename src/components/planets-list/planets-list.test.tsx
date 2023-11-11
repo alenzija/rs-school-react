@@ -17,6 +17,7 @@ describe('Planets List', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
+
   test('should renders the specified number of cards:', async () => {
     const contextValue = {
       searchPhrase: '',
@@ -42,22 +43,24 @@ describe('Planets List', () => {
       }> => Promise.resolve(contextValue.planetsData)
     );
 
-    let container: HTMLElement;
     await act(async () => {
-      const response = render(
+      render(
         <MemoryRouter>
           <AppContext.Provider value={contextValue}>
             <PlanetsList />
           </AppContext.Provider>
         </MemoryRouter>
       );
-      container = response.container;
     });
+
     await waitFor(() => {
-      expect(container.querySelectorAll('.planets__card').length).toBe(10);
+      const planetList = screen.getByRole('planets-list');
+      const cards = screen.getAllByRole('card');
+      expect(planetList).toBeInTheDocument();
+      expect(cards.length).toBe(10);
     });
-    //screen.debug();
   });
+
   test('should display an appropriate message if no cards are present:', async () => {
     const contextValue = {
       searchPhrase: '',
