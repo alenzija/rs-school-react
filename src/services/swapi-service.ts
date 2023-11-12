@@ -3,7 +3,7 @@ import { IPlanet } from '../types';
 export class SwapiService {
   private static baseURL = 'https://swapi.dev/api';
 
-  private static transfromPlanetsDataToPlanet(
+  public static transfromPlanetsDataToPlanet(
     data: Record<string, string>
   ): IPlanet {
     return {
@@ -73,11 +73,5 @@ export class SwapiService {
     }
     const data = await res.json();
     return this.transfromPlanetsDataToPlanet(data.results[0]);
-  }
-
-  public static async getFilm(url: string): Promise<string | null> {
-    const res = await fetch(url);
-    const data = await res.json();
-    return data.title;
   }
 }
