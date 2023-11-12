@@ -50,6 +50,8 @@ export const SearchForm = () => {
     <form className="search-form" onSubmit={handleSubmit}>
       <input
         className="search-form__input"
+        id="search-input"
+        role="search-input"
         ref={inputRef}
         value={value}
         onChange={handleChange}
