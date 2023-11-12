@@ -1,6 +1,6 @@
 export const Spinner = () => {
   return (
-    <div className="spinner">
+    <div className="spinner" role="spinner">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         style={{
