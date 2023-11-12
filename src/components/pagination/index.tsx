@@ -5,10 +5,6 @@ import { AppContext } from '../../context';
 
 import './pagination.scss';
 
-// type PaginationProps = {
-//   hasNextPage: boolean;
-// };
-
 export const Pagination = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { state } = useNavigation();
@@ -29,11 +25,16 @@ export const Pagination = () => {
 
   return (
     <div className="pagination">
-      <button disabled={page === 1 || state === 'loading'} onClick={toPrevPage}>
+      <button
+        role="to-prev-page"
+        disabled={page === 1 || state === 'loading'}
+        onClick={toPrevPage}
+      >
         {'<'}
       </button>
       <button disabled={true}>{page}</button>
       <button
+        role="to-next-page"
         disabled={!appContext.planetsData.nextPage || state === 'loading'}
         onClick={toNextPage}
       >
