@@ -55,4 +55,11 @@ describe('Search Form', () => {
     expect(setItemSpy.mock.calls[0][0]).toBe('searchPhrase');
     expect(setItemSpy.mock.calls[0][1]).toBe(testInputValue);
   });
+
+  test('should handleChange works', () => {
+    const testInputValue = 'test';
+    fireEvent.change(input, { target: { value: testInputValue } });
+
+    expect(input.value).toBe(testInputValue);
+  });
 });

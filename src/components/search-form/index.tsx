@@ -13,11 +13,7 @@ export const SearchForm = () => {
   const [value, setValue] = useState(searchPhrase);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const target = e.target;
-    if (!target || !(target instanceof HTMLInputElement)) {
-      return;
-    }
-    setValue(target.value);
+    setValue(e.target.value);
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {

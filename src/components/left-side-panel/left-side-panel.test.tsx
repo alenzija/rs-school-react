@@ -3,7 +3,7 @@ import { test, jest, expect, describe } from '@jest/globals';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
-import { LeftSidePanel } from '.';
+import { LeftSidePanel, getPlanetLoader } from '.';
 import { SwapiService } from '../../services/swapi-service';
 import { IPlanet } from '../../types';
 
@@ -11,19 +11,20 @@ jest.mock('../../services/swapi-service');
 
 const getPlanetByNameMocked = SwapiService.getPlanetByName as jest.Mock;
 
+const testPlanet = {
+  name: 'testName',
+  climate: 'testClimate',
+  terrain: 'testTerrain',
+  population: 'testPopulation',
+  diameter: 'testDiameter',
+  orbitalPeriod: 'testOrbitalPeriod',
+};
+
 describe('Detailed card', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  const testPlanet = {
-    name: 'testName',
-    climate: 'testClimate',
-    terrain: 'testTerrain',
-    population: 'testPopulation',
-    diameter: 'testDiameter',
-    orbitalPeriod: 'testOrbitalPeriod',
-  };
   getPlanetByNameMocked.mockImplementation(
     (): Promise<IPlanet> => Promise.resolve(testPlanet)
   );
@@ -88,4 +89,15 @@ describe('Detailed card', () => {
     expect(diameter).toBeInTheDocument();
     expect(orbitalPeriod).toBeInTheDocument();
   });
+});
+
+test('should getPlanetLoader works while no params', async () => {
+  expect(await getPlanetLoader({ params: {} })).toBeUndefined();
+});
+
+test('should getPlanetLoader works while no params', async () => {
+  getPlanetByNameMocked.mockImplementation(
+    (): Promise<IPlanet> => Promise.resolve(testPlanet)
+  );
+  expect(getPlanetLoader({ params: { name: 'name' } })).toBeTruthy();
 });

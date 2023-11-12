@@ -3,7 +3,7 @@ import { test, jest, expect, describe, afterEach } from '@jest/globals';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { PlanetsList } from '.';
+import { PlanetsList, planetListLoader } from '.';
 import { AppContext } from '../../context';
 import { SwapiService } from '../../services/swapi-service';
 import { act } from 'react-dom/test-utils';
@@ -12,6 +12,7 @@ import { IPlanet } from '../../types';
 jest.mock('../../services/swapi-service');
 
 const getAllPlanetsMocked = SwapiService.getAllPlanets as jest.Mock;
+const searchPlanetByNameMocked = SwapiService.searchPlanetByName as jest.Mock;
 
 describe('Planets List', () => {
   afterEach(() => {
@@ -94,4 +95,32 @@ describe('Planets List', () => {
       expect(cards).toBeNull();
     });
   });
+});
+
+test('should planetListLoader works when no search params', async () => {
+  getAllPlanetsMocked.mockImplementation(
+    (): Promise<{
+      planets: IPlanet[];
+      nextPage: boolean;
+    }> => Promise.resolve({ planets: [], nextPage: false })
+  );
+
+  expect(
+    planetListLoader({ request: new Request('http://exemple.com') })
+  ).toBeTruthy();
+});
+
+test('should planetListLoader works when there are search params', async () => {
+  searchPlanetByNameMocked.mockImplementation(
+    (): Promise<{
+      planets: IPlanet[];
+      nextPage: boolean;
+    }> => Promise.resolve({ planets: [], nextPage: false })
+  );
+
+  expect(
+    planetListLoader({
+      request: new Request('http://exemple.com/?search=name&page=1'),
+    })
+  ).toBeTruthy();
 });

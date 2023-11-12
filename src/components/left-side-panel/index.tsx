@@ -38,9 +38,6 @@ export const getPlanetLoader = async ({
 
 export const LeftSidePanel = () => {
   const data = useLoaderData() as { res: IPlanet };
-
-  // data.res = new Promise(() => {});
-
   return (
     <div
       role="detailed-component"
