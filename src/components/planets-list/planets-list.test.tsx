@@ -2,11 +2,11 @@ import '@testing-library/jest-dom';
 import { test, jest, expect, describe, afterEach } from '@jest/globals';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { act } from 'react-dom/test-utils';
 
 import { PlanetsList, planetListLoader } from '.';
 import { AppContext } from '../../context';
 import { SwapiService } from '../../services/swapi-service';
-import { act } from 'react-dom/test-utils';
 import { IPlanet } from '../../types';
 
 jest.mock('../../services/swapi-service');

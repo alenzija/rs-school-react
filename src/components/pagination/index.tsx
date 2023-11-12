@@ -8,7 +8,7 @@ import './pagination.scss';
 export const Pagination = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { state } = useNavigation();
-  const appContext = useContext(AppContext);
+  const { planetsData } = useContext(AppContext);
 
   const hasPage = searchParams.get('page');
   const page = hasPage ? +hasPage : 1;
@@ -35,7 +35,7 @@ export const Pagination = () => {
       <button disabled={true}>{page}</button>
       <button
         role="to-next-page"
-        disabled={!appContext.planetsData.nextPage || state === 'loading'}
+        disabled={!planetsData.nextPage || state === 'loading'}
         onClick={toNextPage}
       >
         {'>'}

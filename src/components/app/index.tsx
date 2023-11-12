@@ -4,8 +4,6 @@ import { Outlet } from 'react-router-dom';
 import { SearchForm } from '../search-form';
 import { Pagination } from '../pagination';
 import { PlanetsList } from '../planets-list';
-// import Spinner from '../spinner';
-// import ErrorMessage from '../error-message';
 
 import { ResponseType } from '../../types';
 
@@ -14,7 +12,6 @@ import { AppContext } from '../../context';
 import './app.scss';
 
 export const App = () => {
-  // const data = useLoaderData() as { res: ResponseType };
   const [searchPhrase, setSearchPhrase] = useState(
     localStorage.getItem('searchPhrase') || ''
   );
@@ -43,20 +40,8 @@ export const App = () => {
           }}
         >
           <SearchForm />
-          {/* <Suspense fallback={<Spinner />}>
-            <Await resolve={data.res}>
-              {(response) => {
-                return !response ? (
-                  <ErrorMessage />
-                ) : (
-                  <> */}
           <PlanetsList />
           <Pagination />
-          {/* </>
-                );
-              }}
-            </Await>
-          </Suspense> */}
         </AppContext.Provider>
       </div>
       <Outlet />

@@ -6,13 +6,13 @@ import { DeferredData } from '@remix-run/router/dist/utils';
 
 import { Spinner } from '../spinner';
 import { ErrorMessage } from '../error-message';
+import { PlanetCard } from '../planet-card';
 
 import { AppContext } from '../../context';
 
 import { SwapiService } from '../../services/swapi-service';
 
 import './planets-list.scss';
-import { PlanetCard } from '../planet-card';
 
 export const planetListLoader = async ({
   request,

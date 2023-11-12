@@ -6,9 +6,9 @@ import {
   RouterProvider,
   createMemoryRouter,
 } from 'react-router-dom';
+import { act } from 'react-dom/test-utils';
 
 import { Page404 } from './index';
-import { act } from 'react-dom/test-utils';
 import { routes } from '../../routes';
 
 import { SwapiService } from '../../services/swapi-service';

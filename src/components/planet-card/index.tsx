@@ -26,13 +26,7 @@ export const PlanetCard: React.FC<{ planet: IPlanet; active: boolean }> = ({
         navigate(`/planets/${planet.name}/?${queryParams.toString()}`);
       }}
     >
-      <Planet
-        planet={planet}
-        usedFields={SHORT_PLANETS_FIELDS}
-        // name={planet.name}
-        // climate={planet.climate}
-        // terrain={planet.terrain}
-      />
+      <Planet planet={planet} usedFields={SHORT_PLANETS_FIELDS} />
     </div>
   );
 };
