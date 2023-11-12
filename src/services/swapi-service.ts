@@ -2,21 +2,6 @@ import { IPlanet } from '../types';
 
 export class SwapiService {
   private static baseURL = 'https://swapi.dev/api';
-  // private static transfromPlanetsDataToPlanets(
-  //   data: Record<string, string>[]
-  // ): IPlanet[] {
-  //   return data.map((result) => ({
-  //     name: result.name && result.name !== 'unknown' ? result.name : 'no name',
-  //     climate:
-  //       result.climate && result.climate !== 'unknown'
-  //         ? result.climate
-  //         : 'no climate',
-  //     terrain:
-  //       result.terrain && result.terrain !== 'unknown'
-  //         ? result.terrain
-  //         : 'no terrain',
-  //   }));
-  // }
 
   private static transfromPlanetsDataToPlanet(
     data: Record<string, string>

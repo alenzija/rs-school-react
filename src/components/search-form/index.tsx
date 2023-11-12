@@ -12,11 +12,6 @@ export const SearchForm = () => {
   const { searchPhrase, changeSearchPhrase } = useContext(AppContext);
   const [value, setValue] = useState(searchPhrase);
 
-  //const location = useLocation();
-  //const navigate = useNavigate();
-
-  // const queryParams = new URLSearchParams(location.search);
-
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const target = e.target;
     if (!target || !(target instanceof HTMLInputElement)) {
@@ -28,18 +23,9 @@ export const SearchForm = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const newSearchPhrase: string = inputRef.current?.value.trim() || '';
-    // if (newSearchPhrase === '') {
-    //   newSearchPhrase = null;
-    //   localStorage.removeItem('searchPhrase');
-    //   searchParams.delete('search');
-    //   return;
-    // }
     if (newSearchPhrase === searchPhrase) {
       return;
     }
-    // if (newSearchPhrase !== '') {
-    //   setSearchParams({ ...searchParams, search: newSearchPhrase });
-    // }
     searchParams.set('page', '1');
     setSearchParams(searchParams);
     localStorage.setItem('searchPhrase', newSearchPhrase);

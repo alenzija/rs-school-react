@@ -50,12 +50,12 @@ export const PlanetsList = () => {
     const page = queryParams.has('page') ? +queryParams.get('page')! : 1;
     if (searchPhrase === '') {
       SwapiService.getAllPlanets(page)
-        .then((res) => changePlanetsData(res))
+        .then(changePlanetsData)
         .catch(() => setError(true))
         .finally(() => setState('idle'));
     } else {
       SwapiService.searchPlanetByName(searchPhrase, page)
-        .then((res) => changePlanetsData(res))
+        .then(changePlanetsData)
         .catch(() => setError(true))
         .finally(() => setState('idle'));
     }

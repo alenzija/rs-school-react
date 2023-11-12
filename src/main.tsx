@@ -1,37 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {
-  Route,
-  createBrowserRouter,
-  createRoutesFromElements,
-  RouterProvider,
-} from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import { App } from './components/app';
 import { ErrorBoundary } from './components/error-boundary';
-import { LeftSidePanel, getPlanetLoader } from './components/left-side-panel';
-import { Page404 } from './components/404';
 
-//import { planetListLoader } from './components/planets-list';
+import { routes } from './routes';
 
 import './index.css';
 
-export const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route
-      path="/"
-      element={<App />}
-      errorElement={<Page404 />}
-      // loader={planetListLoader}
-    >
-      <Route
-        path="/planets/:name"
-        element={<LeftSidePanel />}
-        loader={getPlanetLoader}
-      />
-    </Route>
-  )
-);
+const router = createBrowserRouter(routes);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
