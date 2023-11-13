@@ -10,36 +10,9 @@ import { IPlanet } from '../../types';
 
 jest.mock('../../services/swapi-service');
 
-const locationMock = {
-  value: {
-    href: '/',
-    search: '?page=1',
-  },
-  writable: true,
-};
-
-jest.mock('react-router-dom', () => ({
-  ...(jest.requireActual('react-router-dom') as object),
-  useSearchParams: () => {
-    return [
-      new URLSearchParams(locationMock.value.search),
-      (newParams: Record<string, string>) => {
-        locationMock.value.search = locationMock.value.search.replace(
-          /[0-9]+/,
-          newParams.page
-        );
-      },
-    ];
-  },
-}));
-
 const getAllPlanetsMocked = SwapiService.getAllPlanets as jest.Mock;
 
 describe('Pagination ', () => {
-  beforeEach(() => {
-    Object.defineProperty(window, 'location', locationMock);
-  });
-
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -74,7 +47,7 @@ describe('Pagination ', () => {
       element: <App />,
     },
   ];
-  const router = createMemoryRouter(routes);
+  const router = createMemoryRouter(routes, { initialEntries: ['/?page=1'] });
 
   test('should update URL query parameter when page changes', async () => {
     act(() => {
@@ -82,8 +55,10 @@ describe('Pagination ', () => {
     });
 
     let btnNext: HTMLButtonElement;
+    let btnPrev: HTMLButtonElement;
     await waitFor(() => {
       btnNext = screen.getByRole('to-next-page');
+      btnPrev = screen.getByRole('to-prev-page');
     });
 
     act(() => {
@@ -91,7 +66,22 @@ describe('Pagination ', () => {
     });
 
     await waitFor(() => {
-      expect(window.location.search).toBe('?page=2');
+      expect(router.state.location.search).toBe('?page=2');
+    });
+
+    act(() => {
+      fireEvent.click(btnNext);
+    });
+
+    await waitFor(() => {
+      expect(router.state.location.search).toBe('?page=3');
+    });
+    act(() => {
+      fireEvent.click(btnPrev);
+    });
+
+    await waitFor(() => {
+      expect(router.state.location.search).toBe('?page=2');
     });
   });
 });
