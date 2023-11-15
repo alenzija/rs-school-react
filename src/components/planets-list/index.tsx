@@ -32,8 +32,8 @@ export const planetListLoader = async ({
 };
 
 export const PlanetsList = () => {
-  const [error, setError] = useState(false);
-  const [state, setState] = useState<NavigationState>('loading');
+  const [navigationState, setNavigationState] =
+    useState<NavigationState>('loading');
   const location = useLocation();
 
   const { searchPhrase, planetsData, changePlanetsData } =
@@ -45,26 +45,25 @@ export const PlanetsList = () => {
   );
 
   useEffect(() => {
-    setError(false);
-    setState('loading');
+    setNavigationState('loading');
     const page = queryParams.has('page') ? +queryParams.get('page')! : 1;
     if (searchPhrase === '') {
       SwapiService.getAllPlanets(page)
         .then(changePlanetsData)
-        .catch(() => setError(true))
-        .finally(() => setState('idle'));
+        .catch(() => setNavigationState('error'))
+        .finally(() => setNavigationState('idle'));
     } else {
       SwapiService.searchPlanetByName(searchPhrase, page)
         .then(changePlanetsData)
-        .catch(() => setError(true))
-        .finally(() => setState('idle'));
+        .catch(() => setNavigationState('error'))
+        .finally(() => setNavigationState('idle'));
     }
   }, [queryParams, searchPhrase, changePlanetsData]);
 
-  const errorMessage = error ? <ErrorMessage /> : null;
-  const spinner = state === 'loading' ? <Spinner /> : null;
+  const errorMessage = navigationState === 'error' ? <ErrorMessage /> : null;
+  const spinner = navigationState === 'loading' ? <Spinner /> : null;
   const content =
-    state === 'idle' && !error ? <View planets={planetsData.planets} /> : null;
+    navigationState === 'idle' ? <View planets={planetsData.planets} /> : null;
 
   return (
     <>

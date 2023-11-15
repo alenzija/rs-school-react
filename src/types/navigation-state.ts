@@ -1,1 +1,1 @@
-export type NavigationState = 'loading' | 'idle';
+export type NavigationState = 'loading' | 'idle' | 'error';
