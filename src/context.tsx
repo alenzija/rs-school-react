@@ -4,18 +4,18 @@ import { ResponseType } from './types/response-type';
 import { IPlanet } from './types/planet';
 
 interface IAppContext {
-  searchPhrase: string;
+  // searchPhrase: string;
   planetsData: ResponseType;
-  changeSearchPhrase: (value: string) => void;
+  // changeSearchPhrase: (value: string) => void;
   changePlanetsData: (value: ResponseType) => void;
 }
 
 export const AppContext = createContext<IAppContext>({
-  searchPhrase: '',
+  // searchPhrase: '',
   planetsData: {
     planets: [] as IPlanet[],
     nextPage: false,
   },
-  changeSearchPhrase: () => {},
+  // changeSearchPhrase: () => {},
   changePlanetsData: () => {},
 });

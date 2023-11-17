@@ -1,5 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { defer, useLocation, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import { IPlanet, NavigationState } from '../../types';
 import { DeferredData } from '@remix-run/router/dist/utils';
@@ -13,6 +14,7 @@ import { AppContext } from '../../context';
 import { SwapiService } from '../../services/swapi-service';
 
 import './planets-list.scss';
+import { RootState } from '../../store';
 
 export const planetListLoader = async ({
   request,
@@ -36,8 +38,9 @@ export const PlanetsList = () => {
     useState<NavigationState>('loading');
   const location = useLocation();
 
-  const { searchPhrase, planetsData, changePlanetsData } =
-    useContext(AppContext);
+  const { planetsData, changePlanetsData } = useContext(AppContext);
+
+  const searchPhrase = useSelector((state: RootState) => state.search.value);
 
   const queryParams = useMemo(
     () => new URLSearchParams(location.search),
