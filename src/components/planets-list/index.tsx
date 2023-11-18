@@ -1,41 +1,20 @@
 import { useMemo } from 'react';
-import { defer, useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
-import { DeferredData } from '@remix-run/router/dist/utils';
 
 import { Spinner } from '../spinner';
 import { ErrorMessage } from '../error-message';
 import { PlanetCard } from '../planet-card';
 
-import { SwapiService } from '../../services/swapi-service';
+import { RootState } from '../../store';
+import { transfromPlanetData } from '../../helper/transform-planets-data';
+
+import { useGetAllPlanetsQuery } from '../../services/swapi-service-redux';
 
 import './planets-list.scss';
 
-import { RootState } from '../../store';
-import { useGetAllPlanetsQuery } from '../../services/swapi-service-redux';
-import { transfromPlanetData } from '../../helper/transform-planets-data';
-
-export const planetListLoader = async ({
-  request,
-}: {
-  request: Request;
-}): Promise<DeferredData> => {
-  const url = new URL(request.url);
-  const search = url.searchParams.get('search') || '';
-  const page = url.searchParams.has('page')
-    ? +url.searchParams.get('page')!
-    : 1;
-  const res = SwapiService.getPlanets(page, search);
-  return defer({ res });
-};
-
 export const PlanetsList = () => {
-  // const [navigationState, setNavigationState] =
-  //   useState<NavigationState>('loading');
   const location = useLocation();
-
-  // const { planetsData, changePlanetsData } = useContext(AppContext);
 
   const searchPhrase = useSelector((state: RootState) => state.search.value);
 
@@ -49,25 +28,7 @@ export const PlanetsList = () => {
     data: planetsData,
     error,
     isFetching,
-    ...others
   } = useGetAllPlanetsQuery({ page, searchPhrase });
-
-  console.log('>>>loading', { others });
-  // useEffect(() => {
-  //   setNavigationState('loading');
-  //   const page = queryParams.has('page') ? +queryParams.get('page')! : 1;
-  //   if (searchPhrase === '') {
-  //     SwapiService.getAllPlanets(page)
-  //       .then(changePlanetsData)
-  //       .catch(() => setNavigationState('error'))
-  //       .finally(() => setNavigationState('idle'));
-  //   } else {
-  //     SwapiService.searchPlanetByName(searchPhrase, page)
-  //       .then(changePlanetsData)
-  //       .catch(() => setNavigationState('error'))
-  //       .finally(() => setNavigationState('idle'));
-  //   }
-  // }, [queryParams, searchPhrase, changePlanetsData]);
 
   const errorMessage = error ? <ErrorMessage /> : null;
   const spinner = isFetching ? <Spinner /> : null;

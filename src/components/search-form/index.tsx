@@ -11,7 +11,7 @@ export const SearchForm = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const { state } = useNavigation();
-  // const { searchPhrase, changeSearchPhrase } = useContext(AppContext);
+
   const searchPhrase = useSelector((state: RootState) => state.search.value);
   const dispatch = useDispatch();
   const [value, setValue] = useState(searchPhrase);
