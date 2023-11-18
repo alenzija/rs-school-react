@@ -11,48 +11,43 @@ import {
 import { LeftSidePanel } from '../left-side-panel';
 import { App } from '../app';
 
-import { IPlanet } from '../../types';
+import { IPlanet, IPlanetsAPI } from '../../types';
 
 import { SwapiService } from '../../services/swapi-service';
 import { PlanetCard } from '.';
+import { transformPlanetData } from '../../helper/transform-planet-data';
 
 jest.mock('../../services/swapi-service');
 
-const getAllPlanetsMocked = SwapiService.getAllPlanets as jest.Mock;
 const getPlanetByNameMocked = SwapiService.getPlanetByName as jest.Mock;
 
+const dataWithPlanets: IPlanetsAPI = {
+  count: 10,
+  next: 'next',
+  previous: null,
+  results: Array.from({ length: 10 }, (item, i) => ({
+    name: `testName${i}`,
+    climate: 'testClimate',
+    terrain: 'testTerrain',
+    population: 'testPopulation',
+    diameter: 'testDiameter',
+    orbitalPeriod: 'testOrbitalPeriod',
+  })),
+};
+
 describe('Planet card', () => {
+  beforeAll(() => {
+    fetchMock.mockResponseOnce(JSON.stringify(dataWithPlanets));
+  });
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  const contextValue = {
-    searchPhrase: '',
-    changeSearchPhrase: jest.fn(),
-    changePlanetsData: jest.fn(),
-    planetsData: {
-      planets: Array.from({ length: 10 }, (item, i) => ({
-        name: `testName${i}`,
-        climate: 'testClimate',
-        terrain: 'testTerrain',
-        population: 'testPopulation',
-        diameter: 'testDiameter',
-        orbitalPeriod: 'testOrbitalPeriod',
-      })),
-      nextPage: false,
-    },
-  };
-
   getPlanetByNameMocked.mockImplementation(
-    (): Promise<IPlanet> => Promise.resolve(contextValue.planetsData.planets[0])
+    (): Promise<IPlanet> =>
+      Promise.resolve(transformPlanetData(dataWithPlanets.results[0]))
   );
 
-  getAllPlanetsMocked.mockImplementation(
-    (): Promise<{
-      planets: IPlanet[];
-      nextPage: boolean;
-    }> => Promise.resolve(contextValue.planetsData)
-  );
   const routes = [
     {
       path: '/',
@@ -100,7 +95,7 @@ describe('Planet card', () => {
     render(
       <MemoryRouter>
         <PlanetCard
-          planet={contextValue.planetsData.planets[index]}
+          planet={transformPlanetData(dataWithPlanets.results[index])}
           active={false}
         />
       </MemoryRouter>

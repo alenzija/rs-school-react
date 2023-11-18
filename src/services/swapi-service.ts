@@ -1,4 +1,4 @@
-import { transfromPlanetData } from '../helper/transform-planets-data';
+import { transformPlanetData } from '../helper/transform-planet-data';
 import { IPlanet } from '../types';
 
 export class SwapiService {
@@ -18,7 +18,7 @@ export class SwapiService {
     const data = await res.json();
     return {
       planets: data.results.map((item: Record<string, string>) =>
-        transfromPlanetData(item)
+        transformPlanetData(item)
       ),
       nextPage: !!data.next,
     };
@@ -30,6 +30,6 @@ export class SwapiService {
       throw Error('Something went wrong!');
     }
     const data = await res.json();
-    return transfromPlanetData(data.results[0]);
+    return transformPlanetData(data.results[0]);
   }
 }

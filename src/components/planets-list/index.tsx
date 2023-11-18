@@ -7,7 +7,7 @@ import { ErrorMessage } from '../error-message';
 import { PlanetCard } from '../planet-card';
 
 import { RootState } from '../../store';
-import { transfromPlanetData } from '../../helper/transform-planets-data';
+import { transformPlanetData } from '../../helper/transform-planet-data';
 
 import { useGetAllPlanetsQuery } from '../../services/swapi-service-redux';
 
@@ -48,9 +48,9 @@ export const PlanetsList = () => {
 
 const View: React.FC<{ results: Record<string, string>[] }> = ({ results }) => {
   const params = useParams();
-
-  const planets = results.map((item) => transfromPlanetData(item));
-
+  const planets = Array.isArray(results)
+    ? results.map((item) => transformPlanetData(item))
+    : [];
   if (planets.length === 0) {
     return <>No planets</>;
   }

@@ -4,11 +4,13 @@ import { setupListeners } from '@reduxjs/toolkit/query/react';
 import { searchReducer } from './search-slice';
 import { planetsApi } from '../services/swapi-service-redux';
 
+export const reducer = {
+  search: searchReducer,
+  [planetsApi.reducerPath]: planetsApi.reducer,
+};
+
 export const store = configureStore({
-  reducer: {
-    search: searchReducer,
-    [planetsApi.reducerPath]: planetsApi.reducer,
-  },
+  reducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(planetsApi.middleware),
 });

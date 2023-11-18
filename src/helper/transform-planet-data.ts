@@ -1,6 +1,6 @@
 import { IPlanet } from '../types';
 
-export const transfromPlanetData = (data: Record<string, string>): IPlanet => {
+export const transformPlanetData = (data: Record<string, string>): IPlanet => {
   return {
     name: data.name && data.name !== 'unknown' ? data.name : 'no name',
     population:

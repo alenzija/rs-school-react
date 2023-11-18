@@ -4,42 +4,31 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
-import { SwapiService } from '../../services/swapi-service';
 import { App } from '../app';
-import { IPlanet } from '../../types';
+import { IPlanetsAPI } from '../../types';
 
-jest.mock('../../services/swapi-service');
-
-const getAllPlanetsMocked = SwapiService.getAllPlanets as jest.Mock;
+const dataWithPlanets: IPlanetsAPI = {
+  count: 10,
+  next: 'next',
+  previous: 'prev',
+  results: Array.from({ length: 10 }, (item, i) => ({
+    name: `testName${i}`,
+    climate: 'testClimate',
+    terrain: 'testTerrain',
+    population: 'testPopulation',
+    diameter: 'testDiameter',
+    orbitalPeriod: 'testOrbitalPeriod',
+  })),
+};
 
 describe('Pagination ', () => {
+  beforeAll(() => {
+    fetchMock.mockResponse(JSON.stringify(dataWithPlanets));
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
-
-  const contextValue = {
-    searchPhrase: '',
-    changeSearchPhrase: jest.fn(),
-    changePlanetsData: jest.fn(),
-    planetsData: {
-      planets: Array.from({ length: 10 }, (item, i) => ({
-        name: `testName${i}`,
-        climate: 'testClimate',
-        terrain: 'testTerrain',
-        population: 'testPopulation',
-        diameter: 'testDiameter',
-        orbitalPeriod: 'testOrbitalPeriod',
-      })),
-      nextPage: true,
-    },
-  };
-
-  getAllPlanetsMocked.mockImplementation(
-    (): Promise<{
-      planets: IPlanet[];
-      nextPage: boolean;
-    }> => Promise.resolve(contextValue.planetsData)
-  );
 
   const routes = [
     {
@@ -64,7 +53,6 @@ describe('Pagination ', () => {
     act(() => {
       fireEvent.click(btnNext);
     });
-
     await waitFor(() => {
       expect(router.state.location.search).toBe('?page=2');
     });
@@ -72,14 +60,13 @@ describe('Pagination ', () => {
     act(() => {
       fireEvent.click(btnNext);
     });
-
     await waitFor(() => {
       expect(router.state.location.search).toBe('?page=3');
     });
+
     act(() => {
       fireEvent.click(btnPrev);
     });
-
     await waitFor(() => {
       expect(router.state.location.search).toBe('?page=2');
     });

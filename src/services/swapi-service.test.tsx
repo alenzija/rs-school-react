@@ -23,61 +23,6 @@ describe('Swapi Service', () => {
     orbitalPeriod: 'orbitalPeriod data',
   };
 
-  test('should transfromPlanetsDataToPlanet works', () => {
-    expect(SwapiService.transfromPlanetsDataToPlanet(planetData)).toEqual(
-      expected
-    );
-
-    expect(
-      SwapiService.transfromPlanetsDataToPlanet({
-        ...planetData,
-        name: 'unknown',
-      })
-    ).toEqual({ ...expected, name: 'no name' });
-
-    expect(
-      SwapiService.transfromPlanetsDataToPlanet({
-        ...planetData,
-        name: 'unknown',
-      })
-    ).toEqual({ ...expected, name: 'no name' });
-
-    expect(
-      SwapiService.transfromPlanetsDataToPlanet({
-        ...planetData,
-        population: 'unknown',
-      })
-    ).toEqual({ ...expected, population: 'no population' });
-
-    expect(
-      SwapiService.transfromPlanetsDataToPlanet({
-        ...planetData,
-        climate: 'unknown',
-      })
-    ).toEqual({ ...expected, climate: 'no climate' });
-
-    expect(
-      SwapiService.transfromPlanetsDataToPlanet({
-        ...planetData,
-        terrain: 'unknown',
-      })
-    ).toEqual({ ...expected, terrain: 'no terrain' });
-
-    expect(
-      SwapiService.transfromPlanetsDataToPlanet({
-        ...planetData,
-        diameter: 'unknown',
-      })
-    ).toEqual({ ...expected, diameter: 'no diameter' });
-
-    expect(
-      SwapiService.transfromPlanetsDataToPlanet({
-        ...planetData,
-        orbital_period: 'unknown',
-      })
-    ).toEqual({ ...expected, orbitalPeriod: 'no orbital period' });
-  });
-
   test('getAllPlanets', async () => {
     (fetch as FetchMock).mockResponseOnce(
       JSON.stringify({
@@ -85,7 +30,7 @@ describe('Swapi Service', () => {
         next: true,
       })
     );
-    expect(await SwapiService.getAllPlanets(1)).toEqual({
+    expect(await SwapiService.getPlanets(1)).toEqual({
       planets: [expected],
       nextPage: true,
     });
@@ -98,7 +43,7 @@ describe('Swapi Service', () => {
         next: true,
       })
     );
-    expect(await SwapiService.searchPlanetByName('name', 1)).toEqual({
+    expect(await SwapiService.getPlanets(1, 'name')).toEqual({
       planets: [expected],
       nextPage: true,
     });

@@ -28,7 +28,6 @@ export const Pagination = () => {
     const newSearchParams = { ...searchParams, page: `${page + 1}` };
     setSearchParams(newSearchParams);
   };
-
   return (
     <div className="pagination">
       <button
