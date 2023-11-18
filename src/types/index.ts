@@ -1,5 +1,6 @@
 import { NavigationState } from './navigation-state';
 import { IPlanet } from './planet';
-import { ResponseType } from './response-type';
+import { IPlanetsAPI } from './planets-api';
+import { IPlanetsData } from './planets-data';
 
-export type { NavigationState, IPlanet, ResponseType };
+export type { NavigationState, IPlanet, IPlanetsAPI, IPlanetsData };

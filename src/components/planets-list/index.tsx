@@ -1,20 +1,20 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { defer, useLocation, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-import { IPlanet, NavigationState } from '../../types';
 import { DeferredData } from '@remix-run/router/dist/utils';
 
 import { Spinner } from '../spinner';
 import { ErrorMessage } from '../error-message';
 import { PlanetCard } from '../planet-card';
 
-import { AppContext } from '../../context';
-
 import { SwapiService } from '../../services/swapi-service';
 
 import './planets-list.scss';
+
 import { RootState } from '../../store';
+import { useGetAllPlanetsQuery } from '../../services/swapi-service-redux';
+import { transfromPlanetData } from '../../helper/transform-planets-data';
 
 export const planetListLoader = async ({
   request,
@@ -26,19 +26,16 @@ export const planetListLoader = async ({
   const page = url.searchParams.has('page')
     ? +url.searchParams.get('page')!
     : 1;
-  const res =
-    search === ''
-      ? SwapiService.getAllPlanets(page)
-      : SwapiService.searchPlanetByName(search, page);
+  const res = SwapiService.getPlanets(page, search);
   return defer({ res });
 };
 
 export const PlanetsList = () => {
-  const [navigationState, setNavigationState] =
-    useState<NavigationState>('loading');
+  // const [navigationState, setNavigationState] =
+  //   useState<NavigationState>('loading');
   const location = useLocation();
 
-  const { planetsData, changePlanetsData } = useContext(AppContext);
+  // const { planetsData, changePlanetsData } = useContext(AppContext);
 
   const searchPhrase = useSelector((state: RootState) => state.search.value);
 
@@ -46,27 +43,38 @@ export const PlanetsList = () => {
     () => new URLSearchParams(location.search),
     [location.search]
   );
+  const page = queryParams.has('page') ? +queryParams.get('page')! : 1;
 
-  useEffect(() => {
-    setNavigationState('loading');
-    const page = queryParams.has('page') ? +queryParams.get('page')! : 1;
-    if (searchPhrase === '') {
-      SwapiService.getAllPlanets(page)
-        .then(changePlanetsData)
-        .catch(() => setNavigationState('error'))
-        .finally(() => setNavigationState('idle'));
-    } else {
-      SwapiService.searchPlanetByName(searchPhrase, page)
-        .then(changePlanetsData)
-        .catch(() => setNavigationState('error'))
-        .finally(() => setNavigationState('idle'));
-    }
-  }, [queryParams, searchPhrase, changePlanetsData]);
+  const {
+    data: planetsData,
+    error,
+    isFetching,
+    ...others
+  } = useGetAllPlanetsQuery({ page, searchPhrase });
 
-  const errorMessage = navigationState === 'error' ? <ErrorMessage /> : null;
-  const spinner = navigationState === 'loading' ? <Spinner /> : null;
+  console.log('>>>loading', { others });
+  // useEffect(() => {
+  //   setNavigationState('loading');
+  //   const page = queryParams.has('page') ? +queryParams.get('page')! : 1;
+  //   if (searchPhrase === '') {
+  //     SwapiService.getAllPlanets(page)
+  //       .then(changePlanetsData)
+  //       .catch(() => setNavigationState('error'))
+  //       .finally(() => setNavigationState('idle'));
+  //   } else {
+  //     SwapiService.searchPlanetByName(searchPhrase, page)
+  //       .then(changePlanetsData)
+  //       .catch(() => setNavigationState('error'))
+  //       .finally(() => setNavigationState('idle'));
+  //   }
+  // }, [queryParams, searchPhrase, changePlanetsData]);
+
+  const errorMessage = error ? <ErrorMessage /> : null;
+  const spinner = isFetching ? <Spinner /> : null;
   const content =
-    navigationState === 'idle' ? <View planets={planetsData.planets} /> : null;
+    !(error || isFetching) && planetsData ? (
+      <View results={planetsData.results} />
+    ) : null;
 
   return (
     <>
@@ -77,8 +85,10 @@ export const PlanetsList = () => {
   );
 };
 
-const View: React.FC<{ planets: IPlanet[] }> = ({ planets }) => {
+const View: React.FC<{ results: Record<string, string>[] }> = ({ results }) => {
   const params = useParams();
+
+  const planets = results.map((item) => transfromPlanetData(item));
 
   if (planets.length === 0) {
     return <>No planets</>;

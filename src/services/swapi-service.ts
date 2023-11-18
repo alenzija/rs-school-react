@@ -31,10 +31,14 @@ export class SwapiService {
     };
   }
 
-  public static async getAllPlanets(
-    page: number
+  public static async getPlanets(
+    page: number,
+    name: string = ''
   ): Promise<{ planets: IPlanet[]; nextPage: boolean }> {
-    const res = await fetch(`${this.baseURL}/planets/?page=${page}`);
+    const res =
+      name === ''
+        ? await fetch(`${this.baseURL}/planets/?page=${page}`)
+        : await fetch(`${this.baseURL}/planets/?search=${name}&page=${page}`);
     if (!res.ok) {
       throw Error('Something went wrong!');
     }
@@ -47,24 +51,24 @@ export class SwapiService {
     };
   }
 
-  public static async searchPlanetByName(
-    name: string,
-    page: number
-  ): Promise<{ planets: IPlanet[]; nextPage: boolean }> {
-    const res = await fetch(
-      `${this.baseURL}/planets/?search=${name}&page=${page}`
-    );
-    if (!res.ok) {
-      throw Error('Something went wrong!');
-    }
-    const data = await res.json();
-    return {
-      planets: data.results.map((item: Record<string, string>) =>
-        this.transfromPlanetsDataToPlanet(item)
-      ),
-      nextPage: !!data.next,
-    };
-  }
+  // public static async searchPlanetByName(
+  //   name: string,
+  //   page: number
+  // ): Promise<{ planets: IPlanet[]; nextPage: boolean }> {
+  //   const res = await fetch(
+  //     `${this.baseURL}/planets/?search=${name}&page=${page}`
+  //   );
+  //   if (!res.ok) {
+  //     throw Error('Something went wrong!');
+  //   }
+  //   const data = await res.json();
+  //   return {
+  //     planets: data.results.map((item: Record<string, string>) =>
+  //       this.transfromPlanetsDataToPlanet(item)
+  //     ),
+  //     nextPage: !!data.next,
+  //   };
+  // }
 
   public static async getPlanetByName(name: string): Promise<IPlanet> {
     const res = await fetch(`${this.baseURL}/planets/?search=${name}`);

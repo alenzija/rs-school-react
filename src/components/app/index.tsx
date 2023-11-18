@@ -6,7 +6,7 @@ import { SearchForm } from '../search-form';
 import { Pagination } from '../pagination';
 import { PlanetsList } from '../planets-list';
 
-import { ResponseType } from '../../types';
+import { IPlanetsData } from '../../types';
 
 import { AppContext } from '../../context';
 
@@ -18,7 +18,7 @@ export const App = () => {
   // const [searchPhrase, setSearchPhrase] = useState(
   //   localStorage.getItem('searchPhrase') || ''
   // );
-  const [planetsData, setPlanetsData] = useState<ResponseType>({
+  const [planetsData, setPlanetsData] = useState<IPlanetsData>({
     planets: [],
     nextPage: false,
   });
@@ -27,7 +27,7 @@ export const App = () => {
   //   setSearchPhrase(value);
   // }, []);
 
-  const changePlanetsData = useCallback((value: ResponseType): void => {
+  const changePlanetsData = useCallback((value: IPlanetsData): void => {
     setPlanetsData(value);
   }, []);
 
