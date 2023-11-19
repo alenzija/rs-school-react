@@ -4,42 +4,18 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
-import { SwapiService } from '../../services/swapi-service';
 import { App } from '../app';
-import { IPlanet } from '../../types';
-
-jest.mock('../../services/swapi-service');
-
-const getAllPlanetsMocked = SwapiService.getAllPlanets as jest.Mock;
+import { dataWithPlanets } from '../../tests/mocks';
 
 describe('Pagination ', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
+  beforeAll(() => {
+    fetchMock.mockResponse(JSON.stringify(dataWithPlanets));
   });
 
-  const contextValue = {
-    searchPhrase: '',
-    changeSearchPhrase: jest.fn(),
-    changePlanetsData: jest.fn(),
-    planetsData: {
-      planets: Array.from({ length: 10 }, (item, i) => ({
-        name: `testName${i}`,
-        climate: 'testClimate',
-        terrain: 'testTerrain',
-        population: 'testPopulation',
-        diameter: 'testDiameter',
-        orbitalPeriod: 'testOrbitalPeriod',
-      })),
-      nextPage: true,
-    },
-  };
-
-  getAllPlanetsMocked.mockImplementation(
-    (): Promise<{
-      planets: IPlanet[];
-      nextPage: boolean;
-    }> => Promise.resolve(contextValue.planetsData)
-  );
+  afterEach(() => {
+    jest.clearAllMocks();
+    fetchMock.resetMocks();
+  });
 
   const routes = [
     {
@@ -64,7 +40,6 @@ describe('Pagination ', () => {
     act(() => {
       fireEvent.click(btnNext);
     });
-
     await waitFor(() => {
       expect(router.state.location.search).toBe('?page=2');
     });
@@ -72,14 +47,13 @@ describe('Pagination ', () => {
     act(() => {
       fireEvent.click(btnNext);
     });
-
     await waitFor(() => {
       expect(router.state.location.search).toBe('?page=3');
     });
+
     act(() => {
       fireEvent.click(btnPrev);
     });
-
     await waitFor(() => {
       expect(router.state.location.search).toBe('?page=2');
     });

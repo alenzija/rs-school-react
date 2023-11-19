@@ -1,10 +1,14 @@
 import '@testing-library/jest-dom';
+import { Provider } from 'react-redux';
 import { test, expect } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 
 import { SearchForm } from './index';
+import { store } from '../../store';
+
+// const searchStore = { search: { value: '' } };
 
 describe('Search Form', () => {
   let button: HTMLButtonElement;
@@ -16,7 +20,11 @@ describe('Search Form', () => {
 
   beforeEach(() => {
     act(() => {
-      render(<RouterProvider router={router} />);
+      render(
+        <Provider store={store}>
+          <RouterProvider router={router} />
+        </Provider>
+      );
     });
     button = screen.getByRole('button');
     input = screen.getByRole<HTMLInputElement>('search-input');

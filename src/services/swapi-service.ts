@@ -1,66 +1,24 @@
+import { transformPlanetData } from '../helper/transform-planet-data';
 import { IPlanet } from '../types';
 
 export class SwapiService {
   private static baseURL = 'https://swapi.dev/api';
 
-  public static transfromPlanetsDataToPlanet(
-    data: Record<string, string>
-  ): IPlanet {
-    return {
-      name: data.name && data.name !== 'unknown' ? data.name : 'no name',
-      population:
-        data.population && data.population !== 'unknown'
-          ? data.population
-          : 'no population',
-      climate:
-        data.climate && data.climate !== 'unknown'
-          ? data.climate
-          : 'no climate',
-      terrain:
-        data.terrain && data.terrain !== 'unknown'
-          ? data.terrain
-          : 'no terrain',
-      diameter:
-        data.diameter && data.diameter !== 'unknown'
-          ? data.diameter
-          : 'no diameter',
-      orbitalPeriod:
-        data['orbital_period'] && data['orbital_period'] !== 'unknown'
-          ? data['orbital_period']
-          : 'no orbital period',
-    };
-  }
-
-  public static async getAllPlanets(
-    page: number
+  public static async getPlanets(
+    page: number,
+    name: string = ''
   ): Promise<{ planets: IPlanet[]; nextPage: boolean }> {
-    const res = await fetch(`${this.baseURL}/planets/?page=${page}`);
+    const res =
+      name === ''
+        ? await fetch(`${this.baseURL}/planets/?page=${page}`)
+        : await fetch(`${this.baseURL}/planets/?search=${name}&page=${page}`);
     if (!res.ok) {
       throw Error('Something went wrong!');
     }
     const data = await res.json();
     return {
       planets: data.results.map((item: Record<string, string>) =>
-        this.transfromPlanetsDataToPlanet(item)
-      ),
-      nextPage: !!data.next,
-    };
-  }
-
-  public static async searchPlanetByName(
-    name: string,
-    page: number
-  ): Promise<{ planets: IPlanet[]; nextPage: boolean }> {
-    const res = await fetch(
-      `${this.baseURL}/planets/?search=${name}&page=${page}`
-    );
-    if (!res.ok) {
-      throw Error('Something went wrong!');
-    }
-    const data = await res.json();
-    return {
-      planets: data.results.map((item: Record<string, string>) =>
-        this.transfromPlanetsDataToPlanet(item)
+        transformPlanetData(item)
       ),
       nextPage: !!data.next,
     };
@@ -72,6 +30,6 @@ export class SwapiService {
       throw Error('Something went wrong!');
     }
     const data = await res.json();
-    return this.transfromPlanetsDataToPlanet(data.results[0]);
+    return transformPlanetData(data.results[0]);
   }
 }

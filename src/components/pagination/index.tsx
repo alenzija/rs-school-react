@@ -1,17 +1,23 @@
-import { useContext } from 'react';
-import { useNavigation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-import { AppContext } from '../../context';
+import { RootState } from '../../store';
+
+import { useGetAllPlanetsQuery } from '../../services/swapi-service-redux';
 
 import './pagination.scss';
 
 export const Pagination = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { state } = useNavigation();
-  const { planetsData } = useContext(AppContext);
-
+  const searchPhrase = useSelector((state: RootState) => state.search.value);
   const hasPage = searchParams.get('page');
   const page = hasPage ? +hasPage : 1;
+
+  const {
+    data: planetsData,
+    error,
+    isFetching,
+  } = useGetAllPlanetsQuery({ page, searchPhrase });
 
   const toPrevPage = () => {
     const newSearchParams = { ...searchParams, page: `${page - 1}` };
@@ -22,12 +28,11 @@ export const Pagination = () => {
     const newSearchParams = { ...searchParams, page: `${page + 1}` };
     setSearchParams(newSearchParams);
   };
-
   return (
     <div className="pagination">
       <button
         role="to-prev-page"
-        disabled={page === 1 || state === 'loading'}
+        disabled={page === 1 || isFetching || !!error}
         onClick={toPrevPage}
       >
         {'<'}
@@ -35,7 +40,7 @@ export const Pagination = () => {
       <button disabled={true}>{page}</button>
       <button
         role="to-next-page"
-        disabled={!planetsData.nextPage || state === 'loading'}
+        disabled={!planetsData?.next || isFetching || !!error}
         onClick={toNextPage}
       >
         {'>'}

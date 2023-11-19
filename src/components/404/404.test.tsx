@@ -11,13 +11,10 @@ import { act } from 'react-dom/test-utils';
 import { Page404 } from './index';
 import { routes } from '../../routes';
 
-import { SwapiService } from '../../services/swapi-service';
-
-jest.mock('../../services/swapi-service');
-
-const getAllPlanetsMocked = SwapiService.getAllPlanets as jest.Mock;
-
 describe('Page 404', () => {
+  beforeAll(() => {
+    fetchMock.mockResponse(JSON.stringify({}));
+  });
   test('should have a link to home page', () => {
     render(
       <MemoryRouter>
@@ -29,12 +26,6 @@ describe('Page 404', () => {
   });
 
   test('Ensure that the 404 page is displayed when navigating to an invalid route', async () => {
-    getAllPlanetsMocked.mockImplementation(
-      (): Promise<{
-        planets: [];
-        nextPage: boolean;
-      }> => Promise.resolve({ planets: [], nextPage: false })
-    );
     const router = createMemoryRouter(routes, {
       initialEntries: ['/pageThatNotFound'],
     });

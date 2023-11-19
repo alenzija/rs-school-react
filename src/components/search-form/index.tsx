@@ -1,7 +1,9 @@
-import { useRef, useState, ChangeEvent, FormEvent, useContext } from 'react';
+import { useRef, useState, ChangeEvent, FormEvent } from 'react';
 import { useSearchParams, useNavigation } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { AppContext } from '../../context';
+import { RootState } from '../../store';
+import { changeSearch } from '../../store/search-slice';
 
 import './seacrh-form.scss';
 
@@ -9,8 +11,12 @@ export const SearchForm = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const { state } = useNavigation();
-  const { searchPhrase, changeSearchPhrase } = useContext(AppContext);
+
+  const searchPhrase = useSelector((state: RootState) => state.search.value);
+  const dispatch = useDispatch();
   const [value, setValue] = useState(searchPhrase);
+
+  const changeSearchPhrase = () => dispatch(changeSearch(value));
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setValue(e.target.value);
@@ -25,7 +31,8 @@ export const SearchForm = () => {
     searchParams.set('page', '1');
     setSearchParams(searchParams);
     localStorage.setItem('searchPhrase', newSearchPhrase);
-    changeSearchPhrase(newSearchPhrase);
+    setValue(newSearchPhrase);
+    changeSearchPhrase();
   };
 
   return (
