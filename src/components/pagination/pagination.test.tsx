@@ -5,21 +5,7 @@ import { act } from 'react-dom/test-utils';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { App } from '../app';
-import { IPlanetsAPI } from '../../types';
-
-const dataWithPlanets: IPlanetsAPI = {
-  count: 10,
-  next: 'next',
-  previous: 'prev',
-  results: Array.from({ length: 10 }, (item, i) => ({
-    name: `testName${i}`,
-    climate: 'testClimate',
-    terrain: 'testTerrain',
-    population: 'testPopulation',
-    diameter: 'testDiameter',
-    orbitalPeriod: 'testOrbitalPeriod',
-  })),
-};
+import { dataWithPlanets } from '../../tests/mocks';
 
 describe('Pagination ', () => {
   beforeAll(() => {
@@ -28,6 +14,7 @@ describe('Pagination ', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    fetchMock.resetMocks();
   });
 
   const routes = [

@@ -11,29 +11,16 @@ import {
 import { LeftSidePanel } from '../left-side-panel';
 import { App } from '../app';
 
-import { IPlanet, IPlanetsAPI } from '../../types';
+import { IPlanet } from '../../types';
 
 import { SwapiService } from '../../services/swapi-service';
 import { PlanetCard } from '.';
 import { transformPlanetData } from '../../helper/transform-planet-data';
+import { dataWithPlanets } from '../../tests/mocks';
 
 jest.mock('../../services/swapi-service');
 
 const getPlanetByNameMocked = SwapiService.getPlanetByName as jest.Mock;
-
-const dataWithPlanets: IPlanetsAPI = {
-  count: 10,
-  next: 'next',
-  previous: null,
-  results: Array.from({ length: 10 }, (item, i) => ({
-    name: `testName${i}`,
-    climate: 'testClimate',
-    terrain: 'testTerrain',
-    population: 'testPopulation',
-    diameter: 'testDiameter',
-    orbitalPeriod: 'testOrbitalPeriod',
-  })),
-};
 
 describe('Planet card', () => {
   beforeAll(() => {

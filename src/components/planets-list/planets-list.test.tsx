@@ -11,28 +11,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { reducer } from '../../store';
 import { planetsApi } from '../../services/swapi-service-redux';
 
-import { IPlanetsAPI } from '../../types';
-
-const dataWithPlanets: IPlanetsAPI = {
-  count: 10,
-  next: 'next',
-  previous: null,
-  results: Array.from({ length: 10 }, (item, i) => ({
-    name: `testName${i}`,
-    climate: 'testClimate',
-    terrain: 'testTerrain',
-    population: 'testPopulation',
-    diameter: 'testDiameter',
-    orbitalPeriod: 'testOrbitalPeriod',
-  })),
-};
-
-const dataWithoutPlanets: IPlanetsAPI = {
-  count: 0,
-  next: null,
-  previous: null,
-  results: [],
-};
+import { dataWithPlanets, dataWithoutPlanets } from '../../tests/mocks';
 
 const setup = () => {
   const store = configureStore({
