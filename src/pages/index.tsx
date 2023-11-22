@@ -1,4 +1,5 @@
 import { PlanetsList } from '@/components/planet-list';
+import { SearchForm } from '@/components/search-form';
 import { SwapiService } from '@/services/swapi-service';
 import { IPlanetsData } from '@/types';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
@@ -16,7 +17,12 @@ export const getServerSideProps = (async ({ query }) => {
 const Home = ({
   planetsData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  return <PlanetsList data={planetsData} />;
+  return (
+    <>
+      <SearchForm />
+      <PlanetsList data={planetsData} />
+    </>
+  );
 };
 
 export default Home;
