@@ -20,11 +20,15 @@ export const SearchForm = () => {
       return;
     }
     router.push({
-      pathname: '/',
-      query: {
-        page: '1',
-        search: newSearchPhrase,
-      },
+      query:
+        newSearchPhrase !== ''
+          ? {
+              page: '1',
+              search: newSearchPhrase,
+            }
+          : {
+              page: '1',
+            },
     });
     // localStorage.setItem('searchPhrase', newSearchPhrase);
     setValue(newSearchPhrase);

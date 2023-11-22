@@ -1,3 +1,4 @@
+import { Pagination } from '@/components/pagination';
 import { PlanetsList } from '@/components/planet-list';
 import { SearchForm } from '@/components/search-form';
 import { SwapiService } from '@/services/swapi-service';
@@ -21,6 +22,7 @@ const Home = ({
     <>
       <SearchForm />
       <PlanetsList data={planetsData} />
+      <Pagination nextPage={planetsData.nextPage} />
     </>
   );
 };

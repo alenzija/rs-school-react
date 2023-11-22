@@ -1,9 +1,9 @@
-import { useRouter } from 'next/router';
+import { useParams } from 'next/navigation';
 
 const LeftSidePanel = () => {
-  const { query } = useRouter();
+  const params = useParams();
 
-  return <div>{query.name}</div>;
+  return <div>{params.name}</div>;
 };
 
 export default LeftSidePanel;
