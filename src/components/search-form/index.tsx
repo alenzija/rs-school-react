@@ -4,7 +4,7 @@ import styles from './seacrh-form.module.scss';
 import { useRouter } from 'next/router';
 
 export const SearchForm = () => {
-  const router = useRouter();
+  const { push, query } = useRouter();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState('');
@@ -16,19 +16,14 @@ export const SearchForm = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const newSearchPhrase: string = inputRef.current?.value.trim() || '';
-    if (newSearchPhrase === router.query.search) {
+    if (newSearchPhrase === query.search) {
       return;
     }
-    router.push({
+    push({
       query:
         newSearchPhrase !== ''
-          ? {
-              page: '1',
-              search: newSearchPhrase,
-            }
-          : {
-              page: '1',
-            },
+          ? { ...query, page: '1', search: newSearchPhrase }
+          : { ...query, page: '1' },
     });
     // localStorage.setItem('searchPhrase', newSearchPhrase);
     setValue(newSearchPhrase);

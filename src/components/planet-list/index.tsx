@@ -14,9 +14,9 @@ import { PlanetCard } from '../planet-card';
 // import { useGetAllPlanetsQuery } from '../../services/swapi-service-redux';
 
 import styles from './planets-list.module.scss';
-import { IPlanetsData } from '@/types';
+import { IPlanet } from '@/types';
 
-export const PlanetsList = ({ data }: { data: IPlanetsData }) => {
+export const PlanetsList = ({ planets }: { planets: IPlanet[] }) => {
   // const params = useSearchParams();
 
   // const location = useLocation();
@@ -37,7 +37,7 @@ export const PlanetsList = ({ data }: { data: IPlanetsData }) => {
 
   // const errorMessage = error ? <ErrorMessage /> : null;
   // const spinner = isFetching ? <Spinner /> : null;
-  const content = <View results={data.planets} />;
+  const content = <View results={planets} />;
 
   return (
     <>
