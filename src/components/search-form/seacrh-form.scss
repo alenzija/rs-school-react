@@ -1,0 +1,10 @@
+.search-form {
+  display: flex;
+  padding: 0 10px;
+  gap: 10px;
+
+  &__input {
+    padding: 5px;
+    font-family: inherit;
+  }
+}
