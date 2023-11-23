@@ -1,3 +1,4 @@
+import React from 'react';
 import { Planet } from '../planet';
 import { IPlanet } from '../../types';
 
