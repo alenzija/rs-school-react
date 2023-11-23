@@ -2,7 +2,7 @@
 // import { useLocation, useParams } from 'react-router-dom';
 // import { useSelector } from 'react-redux';
 
-// import { Spinner } from '../spinner';
+import { Spinner } from '../spinner';
 // import { ErrorMessage } from '../error-message';
 // import { PlanetCard } from '../planet-card';
 
@@ -16,7 +16,17 @@ import { PlanetCard } from '../planet-card';
 import styles from './planets-list.module.scss';
 import { IPlanet } from '@/types';
 
-export const PlanetsList = ({ planets }: { planets: IPlanet[] }) => {
+type PlanetsListProps = {
+  planets: IPlanet[];
+  listLoading: boolean;
+  onChangePanelLoading: (value: boolean) => void;
+};
+
+export const PlanetsList: React.FC<PlanetsListProps> = ({
+  planets,
+  listLoading,
+  onChangePanelLoading,
+}) => {
   // const params = useSearchParams();
 
   // const location = useLocation();
@@ -36,23 +46,29 @@ export const PlanetsList = ({ planets }: { planets: IPlanet[] }) => {
   // } = useGetAllPlanetsQuery({ page, searchPhrase });
 
   // const errorMessage = error ? <ErrorMessage /> : null;
-  // const spinner = isFetching ? <Spinner /> : null;
-  const content = <View results={planets} />;
+  const spinner = listLoading ? <Spinner /> : null;
+  const content = !listLoading ? (
+    <View results={planets} onChangePanelLoading={onChangePanelLoading} />
+  ) : null;
 
   return (
     <>
-      {content}
       {/* {data.planets.map((item, index) => (
         <div key={index}>${item.name}</div>
       ))} */}
-      {/* {errorMessage}
+      {/* {errorMessage} */}
       {spinner}
-      {content} */}
+      {content}
     </>
   );
 };
 
-const View: React.FC<{ results: Record<string, string>[] }> = ({ results }) => {
+type ViewProps = {
+  results: Record<string, string>[];
+  onChangePanelLoading: (value: boolean) => void;
+};
+
+const View: React.FC<ViewProps> = ({ results, onChangePanelLoading }) => {
   // const params = useParams();
   const { query } = useRouter();
   const planets = Array.isArray(results)
@@ -69,6 +85,7 @@ const View: React.FC<{ results: Record<string, string>[] }> = ({ results }) => {
           planet={planet}
           active={planet.name === query.name}
           key={index}
+          onChangePanelLoading={onChangePanelLoading}
         />
       ))}
     </div>

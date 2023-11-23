@@ -7,9 +7,17 @@ import { SHORT_PLANETS_FIELDS } from '../../consts';
 import styles from './planet-card.module.scss';
 import { useRouter } from 'next/router';
 
-export const PlanetCard: React.FC<{ planet: IPlanet; active: boolean }> = ({
+type PlanetCardProps = {
+  planet: IPlanet;
+  active: boolean;
+  onChangePanelLoading: (value: boolean) => void;
+};
+
+export const PlanetCard: React.FC<PlanetCardProps> = ({
   planet,
   active,
+  // panelLoading,
+  onChangePanelLoading,
 }) => {
   const { push, query } = useRouter();
   // const navigate = useNavigate();
@@ -27,8 +35,11 @@ export const PlanetCard: React.FC<{ planet: IPlanet; active: boolean }> = ({
           : styles['planet-card']
       }
       onClick={() => {
+        onChangePanelLoading(true);
         push({
           query: { ...query, name: planet.name },
+        }).then(() => {
+          onChangePanelLoading(false);
         });
       }}
     >

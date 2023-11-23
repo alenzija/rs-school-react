@@ -3,7 +3,15 @@ import { useRef, useState, ChangeEvent, FormEvent } from 'react';
 import styles from './seacrh-form.module.scss';
 import { useRouter } from 'next/router';
 
-export const SearchForm = () => {
+type SearchFormProps = {
+  loading: boolean;
+  onChangeLoading: (value: boolean) => void;
+};
+
+export const SearchForm: React.FC<SearchFormProps> = ({
+  loading,
+  onChangeLoading,
+}) => {
   const { push, query } = useRouter();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -19,13 +27,15 @@ export const SearchForm = () => {
     if (newSearchPhrase === query.search) {
       return;
     }
+    onChangeLoading(true);
     push({
       query:
         newSearchPhrase !== ''
           ? { ...query, page: '1', search: newSearchPhrase }
           : { ...query, page: '1' },
+    }).then(() => {
+      onChangeLoading(false);
     });
-    // localStorage.setItem('searchPhrase', newSearchPhrase);
     setValue(newSearchPhrase);
   };
 
@@ -40,7 +50,9 @@ export const SearchForm = () => {
         onChange={handleChange}
         placeholder="Enter a planet name"
       />
-      <button type="submit">Search</button>
+      <button type="submit" disabled={loading}>
+        Search
+      </button>
     </form>
   );
 };

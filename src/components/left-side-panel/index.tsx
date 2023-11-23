@@ -7,6 +7,7 @@ import styles from './left-side-panel.module.scss';
 import Image from 'next/image';
 import closeImg from './close.png';
 import { useRouter } from 'next/router';
+import { Spinner } from '../spinner';
 
 // export const getPlanetLoader = async ({
 //   params,
@@ -21,14 +22,22 @@ import { useRouter } from 'next/router';
 //   return defer({ res });
 // };
 
-export const LeftSidePanel: React.FC<{ planet: IPlanet }> = ({ planet }) => {
+type LeftSidePanelProps = {
+  planet: IPlanet;
+  loading: boolean;
+};
+
+export const LeftSidePanel: React.FC<LeftSidePanelProps> = ({
+  planet,
+  loading,
+}) => {
   return (
     <div
       role="detailed-component"
       className={styles['left-panel']}
       style={{ display: planet ? 'block' : 'none' }}
     >
-      <View data={planet} />
+      {loading ? <Spinner /> : <View data={planet} />}
     </div>
   );
 };
