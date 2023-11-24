@@ -30,6 +30,9 @@ export class SwapiService {
       throw Error('Something went wrong!');
     }
     const data = await res.json();
+    if (data.results.length === 0) {
+      throw Error("Name isn't exist");
+    }
     return transformPlanetData(data.results[0]);
   }
 }

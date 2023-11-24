@@ -6,7 +6,7 @@ import { FULL_PLANETS_FIELDS } from '../../consts';
 
 import styles from './left-side-panel.module.scss';
 import Image from 'next/image';
-import closeImg from './close.png';
+// import closeImg from './close.png';
 import { useRouter } from 'next/router';
 import { Spinner } from '../spinner';
 
@@ -60,7 +60,7 @@ const View: React.FC<{ data: IPlanet }> = ({ data }) => {
       >
         <Image
           className={styles['close-button__img']}
-          src={closeImg}
+          src="/close.png"
           width={20}
           height={20}
           alt="close image"

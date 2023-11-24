@@ -9,6 +9,12 @@ import { testPlanet } from '../../tests/mocks';
 
 jest.mock('../../services/swapi-service');
 jest.mock('next/router', () => require('next-router-mock'));
+jest.mock('next/image', () => ({
+  __esModule: true,
+  default: () => {
+    return 'Next image stub'; // whatever
+  },
+}));
 
 describe('Detailed card', () => {
   afterEach(() => {

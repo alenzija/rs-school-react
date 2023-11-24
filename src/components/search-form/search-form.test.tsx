@@ -1,7 +1,8 @@
 import '@testing-library/jest-dom';
 import { test, expect } from '@jest/globals';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
+import mockRouter from 'next-router-mock';
 
 import { SearchForm } from '.';
 
@@ -33,5 +34,13 @@ describe('Search Form', () => {
     fireEvent.change(input, { target: { value: testInputValue } });
 
     expect(input.value).toBe(testInputValue);
+  });
+
+  test('should change URL after click on the button', async () => {
+    await waitFor(async () => {
+      input.value = 'test';
+      fireEvent.click(button);
+    });
+    expect(mockRouter.query.search).toBe('test');
   });
 });

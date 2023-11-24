@@ -17,9 +17,7 @@
     "react-dom": "^18"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.23.3",
-    "@babel/preset-react": "^7.23.3",
-    "@babel/preset-typescript": "^7.23.3",
+    "@jest/globals": "^29.7.0",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^14.1.2",
     "@types/jest": "^29.5.10",
@@ -49,21 +47,5 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.2"
-  },
-  "jest": {
-    "automock": false,
-    "setupFiles": [
-      "./setupJest.ts"
-    ],
-    "testEnvironment": "jsdom",
-    "moduleNameMapper": {
-      "^.+\\.svg$": "jest-svg-transformer",
-      "^.+\\.(css|less|scss)$": "<rootDir>/__mocks__/styleMock.ts",
-      "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.ts"
-    },
-    "testPathIgnorePatterns": [
-      "node_modules",
-      "react-redux"
-    ]
   }
 }

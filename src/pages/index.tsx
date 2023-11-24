@@ -12,9 +12,16 @@ export const getServerSideProps = (async ({ query }) => {
   const searchPhrase =
     query && 'search' in query ? (query.search as string) : '';
   const name = query && 'name' in query ? (query.name as string) : undefined;
-
-  const planetsData = await SwapiService.getPlanets(page, searchPhrase);
-  const planet = name ? await SwapiService.getPlanetByName(name) : null;
+  let planetsData = {
+    planets: [] as IPlanet[],
+    nextPage: false,
+  };
+  let planet: IPlanet | null = null;
+  try {
+    const res = await SwapiService.getPlanets(page, searchPhrase);
+    planetsData = { ...planetsData, ...res };
+    planet = name ? await SwapiService.getPlanetByName(name) : null;
+  } catch {}
   return { props: { planetsData, planet } };
 }) satisfies GetServerSideProps<{
   planetsData: IPlanetsData;
