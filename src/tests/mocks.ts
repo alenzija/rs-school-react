@@ -1,4 +1,4 @@
-import { IPlanet, IPlanetsAPI } from '../types';
+import { IPlanet } from '../types';
 
 export const dataWithPlanets: {
   planets: IPlanet[];
@@ -15,11 +15,9 @@ export const dataWithPlanets: {
   })),
 };
 
-export const dataWithoutPlanets: IPlanetsAPI = {
-  count: 0,
-  next: null,
-  previous: null,
-  results: [],
+export const dataWithoutPlanets: { planets: IPlanet[]; nextPage: boolean } = {
+  nextPage: false,
+  planets: [],
 };
 
 export const testPlanet = {

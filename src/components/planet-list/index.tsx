@@ -14,7 +14,7 @@ import { PlanetCard } from '../planet-card';
 // import { useGetAllPlanetsQuery } from '../../services/swapi-service-redux';
 
 import styles from './planets-list.module.scss';
-import { IPlanet } from '@/types';
+import { IPlanet } from '../../types';
 
 type PlanetsListProps = {
   planets: IPlanet[];
