@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router';
+
 import { Planet } from '../planet';
 
 import { IPlanet } from '../../types';
@@ -5,7 +7,6 @@ import { IPlanet } from '../../types';
 import { SHORT_PLANETS_FIELDS } from '../../consts';
 
 import styles from './planet-card.module.scss';
-import { useRouter } from 'next/router';
 
 type PlanetCardProps = {
   planet: IPlanet;
@@ -16,15 +17,9 @@ type PlanetCardProps = {
 export const PlanetCard: React.FC<PlanetCardProps> = ({
   planet,
   active,
-  // panelLoading,
   onChangePanelLoading,
 }) => {
   const { push, query } = useRouter();
-  // const navigate = useNavigate();
-  // const location = useLocation();
-
-  // const queryParams = new URLSearchParams(location.search);
-
   return (
     <div
       role="card"
@@ -35,6 +30,9 @@ export const PlanetCard: React.FC<PlanetCardProps> = ({
           : styles['planet-card']
       }
       onClick={() => {
+        if (query.name === planet.name) {
+          return;
+        }
         onChangePanelLoading(true);
         push({
           query: { ...query, name: planet.name },

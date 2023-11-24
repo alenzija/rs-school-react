@@ -1,27 +1,14 @@
-import React from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+
 import { Planet } from '../planet';
+import { Spinner } from '../spinner';
+
 import { IPlanet } from '../../types';
 
 import { FULL_PLANETS_FIELDS } from '../../consts';
 
 import styles from './left-side-panel.module.scss';
-import Image from 'next/image';
-// import closeImg from './close.png';
-import { useRouter } from 'next/router';
-import { Spinner } from '../spinner';
-
-// export const getPlanetLoader = async ({
-//   params,
-// }: {
-//   params: Params;
-// }): Promise<DeferredData | undefined> => {
-//   const { name } = params;
-//   if (!name) {
-//     return;
-//   }
-//   const res = SwapiService.getPlanetByName(name);
-//   return defer({ res });
-// };
 
 type LeftSidePanelProps = {
   planet: IPlanet;

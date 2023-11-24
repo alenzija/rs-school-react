@@ -1,7 +1,7 @@
 import { useRef, useState, ChangeEvent, FormEvent } from 'react';
+import { useRouter } from 'next/router';
 
 import styles from './seacrh-form.module.scss';
-import { useRouter } from 'next/router';
 
 type SearchFormProps = {
   loading: boolean;
