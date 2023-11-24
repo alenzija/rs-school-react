@@ -1,9 +1,9 @@
-import { LeftSidePanel } from '@/components/left-side-panel';
-import { Pagination } from '@/components/pagination';
-import { PlanetsList } from '@/components/planet-list';
-import { SearchForm } from '@/components/search-form';
-import { SwapiService } from '@/services/swapi-service';
-import { IPlanet, IPlanetsData } from '@/types';
+import { LeftSidePanel } from '../components/left-side-panel';
+import { Pagination } from '../components/pagination';
+import { PlanetsList } from '../components/planet-list';
+import { SearchForm } from '../components/search-form';
+import { SwapiService } from '../services/swapi-service';
+import { IPlanet, IPlanetsData } from '../types';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useState } from 'react';
 

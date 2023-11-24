@@ -5,17 +5,10 @@ import { act } from 'react-dom/test-utils';
 
 import { LeftSidePanel } from '.';
 
+import { testPlanet } from '../../tests/mocks';
+
 jest.mock('../../services/swapi-service');
 jest.mock('next/router', () => require('next-router-mock'));
-
-const testPlanet = {
-  name: 'testName',
-  climate: 'testClimate',
-  terrain: 'testTerrain',
-  population: 'testPopulation',
-  diameter: 'testDiameter',
-  orbitalPeriod: 'testOrbitalPeriod',
-};
 
 describe('Detailed card', () => {
   afterEach(() => {
