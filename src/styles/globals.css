@@ -42,7 +42,16 @@ button {
   cursor: pointer;
 }
 
-#root {
+.container {
+  flex-basis: 70%;
+  flex-grow: 3;
+
+  .spinner {
+    width: inherit;
+  }
+}
+
+#__next {
   display: flex;
   width: calc(100vw - 17px);
   max-width: 1320px;

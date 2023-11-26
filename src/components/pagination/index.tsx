@@ -1,38 +1,44 @@
-import { useSearchParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 
-import { RootState } from '../../store';
+import styles from './pagination.module.scss';
 
-import { useGetAllPlanetsQuery } from '../../services/swapi-service-redux';
+type PaginationProps = {
+  nextPage: boolean;
+  loading: boolean;
+  onChangeLoading: (value: boolean) => void;
+};
 
-import './pagination.scss';
+export const Pagination: React.FC<PaginationProps> = ({
+  nextPage,
+  loading,
+  onChangeLoading,
+}) => {
+  const { query, push } = useRouter();
 
-export const Pagination = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const searchPhrase = useSelector((state: RootState) => state.search.value);
-  const hasPage = searchParams.get('page');
-  const page = hasPage ? +hasPage : 1;
-
-  const {
-    data: planetsData,
-    error,
-    isFetching,
-  } = useGetAllPlanetsQuery({ page, searchPhrase });
+  const page = query && 'page' in query ? +query.page! : 1;
 
   const toPrevPage = () => {
-    const newSearchParams = { ...searchParams, page: `${page - 1}` };
-    setSearchParams(newSearchParams);
+    onChangeLoading(true);
+    push({
+      query: { ...query, page: page - 1 },
+    }).then(() => {
+      onChangeLoading(false);
+    });
   };
 
   const toNextPage = () => {
-    const newSearchParams = { ...searchParams, page: `${page + 1}` };
-    setSearchParams(newSearchParams);
+    onChangeLoading(true);
+    push({
+      query: { ...query, page: page + 1 },
+    }).then(() => {
+      onChangeLoading(false);
+    });
   };
   return (
-    <div className="pagination">
+    <div className={styles.pagination}>
       <button
         role="to-prev-page"
-        disabled={page === 1 || isFetching || !!error}
+        disabled={page === 1 || loading}
         onClick={toPrevPage}
       >
         {'<'}
@@ -40,7 +46,7 @@ export const Pagination = () => {
       <button disabled={true}>{page}</button>
       <button
         role="to-next-page"
-        disabled={!planetsData?.next || isFetching || !!error}
+        disabled={!nextPage || loading}
         onClick={toNextPage}
       >
         {'>'}

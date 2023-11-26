@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 
 import { Planet } from '../planet';
 
@@ -6,24 +6,39 @@ import { IPlanet } from '../../types';
 
 import { SHORT_PLANETS_FIELDS } from '../../consts';
 
-import './planet-card.scss';
+import styles from './planet-card.module.scss';
 
-export const PlanetCard: React.FC<{ planet: IPlanet; active: boolean }> = ({
+type PlanetCardProps = {
+  planet: IPlanet;
+  active: boolean;
+  onChangePanelLoading: (value: boolean) => void;
+};
+
+export const PlanetCard: React.FC<PlanetCardProps> = ({
   planet,
   active,
+  onChangePanelLoading,
 }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const queryParams = new URLSearchParams(location.search);
-
+  const { push, query } = useRouter();
   return (
     <div
       role="card"
       key={planet.name}
-      className={active ? 'planet-card active' : 'planet-card'}
+      className={
+        active
+          ? `${styles['planet-card']} ${styles['active']}`
+          : styles['planet-card']
+      }
       onClick={() => {
-        navigate(`/planets/${planet.name}/?${queryParams.toString()}`);
+        if (query.name === planet.name) {
+          return;
+        }
+        onChangePanelLoading(true);
+        push({
+          query: { ...query, name: planet.name },
+        }).then(() => {
+          onChangePanelLoading(false);
+        });
       }}
     >
       <Planet planet={planet} usedFields={SHORT_PLANETS_FIELDS} />

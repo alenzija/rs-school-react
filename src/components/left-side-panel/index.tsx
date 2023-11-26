@@ -1,76 +1,57 @@
-import { Suspense } from 'react';
-import {
-  useLocation,
-  Params,
-  defer,
-  useLoaderData,
-  Await,
-  useNavigate,
-} from 'react-router-dom';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
 
-import { Spinner } from '../spinner';
-import { ErrorMessage } from '../error-message';
 import { Planet } from '../planet';
-
-import { SwapiService } from '../../services/swapi-service';
+import { Spinner } from '../spinner';
 
 import { IPlanet } from '../../types';
-import { DeferredData } from '@remix-run/router/dist/utils';
-
-import closeImg from '../../assets/image/close.png';
 
 import { FULL_PLANETS_FIELDS } from '../../consts';
 
-import './left-side-panel.scss';
+import styles from './left-side-panel.module.scss';
 
-export const getPlanetLoader = async ({
-  params,
-}: {
-  params: Params;
-}): Promise<DeferredData | undefined> => {
-  const { name } = params;
-  if (!name) {
-    return;
-  }
-  const res = SwapiService.getPlanetByName(name);
-  return defer({ res });
+type LeftSidePanelProps = {
+  planet: IPlanet;
+  loading: boolean;
 };
 
-export const LeftSidePanel = () => {
-  const data = useLoaderData() as { res: IPlanet };
+export const LeftSidePanel: React.FC<LeftSidePanelProps> = ({
+  planet,
+  loading,
+}) => {
   return (
     <div
       role="detailed-component"
-      className="left-panel"
-      style={{ display: data ? 'block' : 'none' }}
+      className={styles['left-panel']}
+      style={{ display: planet ? 'block' : 'none' }}
     >
-      <Suspense fallback={<Spinner />}>
-        <Await resolve={data.res}>
-          {(response) => {
-            return !response ? <ErrorMessage /> : <View data={response} />;
-          }}
-        </Await>
-      </Suspense>
+      {loading ? <Spinner /> : <View data={planet} />}
     </div>
   );
 };
 
 const View: React.FC<{ data: IPlanet }> = ({ data }) => {
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const queryParams = new URLSearchParams(location.search);
-
+  const { query, push } = useRouter();
   return (
     <>
       <div
-        className="close-button"
+        className={styles['close-button']}
         role="close-panel"
         onClick={() => {
-          navigate(`/?${queryParams.toString()}`);
+          const newQuery = { ...query };
+          delete newQuery['name'];
+          push({
+            query: { ...newQuery },
+          });
         }}
       >
-        <img className="close-button__img" src={closeImg} alt="close image" />
+        <Image
+          className={styles['close-button__img']}
+          src="/close.png"
+          width={20}
+          height={20}
+          alt="close image"
+        />
       </div>
       <Planet usedFields={FULL_PLANETS_FIELDS} planet={data} />
     </>

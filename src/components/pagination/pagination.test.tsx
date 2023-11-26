@@ -2,10 +2,14 @@ import '@testing-library/jest-dom';
 import { test, jest, expect, describe, afterEach } from '@jest/globals';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
-import { App } from '../app';
-import { dataWithPlanets } from '../../tests/mocks';
+import mockRouter from 'next-router-mock';
+
+import Home from '../../pages';
+
+import { dataWithPlanets, testPlanet } from '../../tests/mocks';
+
+jest.mock('next/router', () => require('next-router-mock'));
 
 describe('Pagination ', () => {
   beforeAll(() => {
@@ -17,17 +21,9 @@ describe('Pagination ', () => {
     fetchMock.resetMocks();
   });
 
-  const routes = [
-    {
-      path: '/',
-      element: <App />,
-    },
-  ];
-  const router = createMemoryRouter(routes, { initialEntries: ['/?page=1'] });
-
   test('should update URL query parameter when page changes', async () => {
     act(() => {
-      render(<RouterProvider router={router} />);
+      render(<Home planetsData={dataWithPlanets} planet={testPlanet} />);
     });
 
     let btnNext: HTMLButtonElement;
@@ -41,21 +37,21 @@ describe('Pagination ', () => {
       fireEvent.click(btnNext);
     });
     await waitFor(() => {
-      expect(router.state.location.search).toBe('?page=2');
+      expect(mockRouter.query.page).toBe(2);
     });
 
     act(() => {
       fireEvent.click(btnNext);
     });
     await waitFor(() => {
-      expect(router.state.location.search).toBe('?page=3');
+      expect(mockRouter.query.page).toBe(3);
     });
 
     act(() => {
       fireEvent.click(btnPrev);
     });
     await waitFor(() => {
-      expect(router.state.location.search).toBe('?page=2');
+      expect(mockRouter.query.page).toBe(2);
     });
   });
 });

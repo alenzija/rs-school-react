@@ -1,22 +1,21 @@
 import { useRef, useState, ChangeEvent, FormEvent } from 'react';
-import { useSearchParams, useNavigation } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 
-import { RootState } from '../../store';
-import { changeSearch } from '../../store/search-slice';
+import styles from './seacrh-form.module.scss';
 
-import './seacrh-form.scss';
+type SearchFormProps = {
+  loading: boolean;
+  onChangeLoading: (value: boolean) => void;
+};
 
-export const SearchForm = () => {
+export const SearchForm: React.FC<SearchFormProps> = ({
+  loading,
+  onChangeLoading,
+}) => {
+  const { push, query } = useRouter();
+
   const inputRef = useRef<HTMLInputElement>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { state } = useNavigation();
-
-  const searchPhrase = useSelector((state: RootState) => state.search.value);
-  const dispatch = useDispatch();
-  const [value, setValue] = useState(searchPhrase);
-
-  const changeSearchPhrase = () => dispatch(changeSearch(value));
+  const [value, setValue] = useState('');
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setValue(e.target.value);
@@ -25,20 +24,25 @@ export const SearchForm = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const newSearchPhrase: string = inputRef.current?.value.trim() || '';
-    if (newSearchPhrase === searchPhrase) {
+    if (newSearchPhrase === query.search) {
       return;
     }
-    searchParams.set('page', '1');
-    setSearchParams(searchParams);
-    localStorage.setItem('searchPhrase', newSearchPhrase);
+    onChangeLoading(true);
+    push({
+      query:
+        newSearchPhrase !== ''
+          ? { ...query, page: '1', search: newSearchPhrase }
+          : { ...query, page: '1' },
+    }).then(() => {
+      onChangeLoading(false);
+    });
     setValue(newSearchPhrase);
-    changeSearchPhrase();
   };
 
   return (
-    <form className="search-form" onSubmit={handleSubmit}>
+    <form className={styles['search-form']} onSubmit={handleSubmit}>
       <input
-        className="search-form__input"
+        className={styles['search-form__input']}
         id="search-input"
         role="search-input"
         ref={inputRef}
@@ -46,7 +50,7 @@ export const SearchForm = () => {
         onChange={handleChange}
         placeholder="Enter a planet name"
       />
-      <button type="submit" disabled={state === 'loading'}>
+      <button type="submit" disabled={loading}>
         Search
       </button>
     </form>
