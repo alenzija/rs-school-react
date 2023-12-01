@@ -10,5 +10,23 @@
       display: block;
       width: 90px;
     }
+
+    &.active {
+      animation: ease-in 1.5s 1 background-animate;
+    }
+  }
+}
+
+@keyframes background-animate {
+  0% {
+    background-color: transparent;
+  }
+
+  50% {
+    background-color: #3bff3b;
+  }
+
+  100% {
+    background-color: transparent;
   }
 }

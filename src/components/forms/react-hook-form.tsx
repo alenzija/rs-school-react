@@ -93,7 +93,6 @@ export const ReactHookForm = () => {
           <div>
             <input
               type="radio"
-              checked
               value="male"
               id="male"
               {...register('gender')}
@@ -111,6 +110,7 @@ export const ReactHookForm = () => {
           </div>
         </div>
       </div>
+      {errors.gender && <div className="error">{errors.gender.message}</div>}
       <div className="text-field">
         <label htmlFor="image">Add your picture:</label>
         <input type="file" id="image" {...register('image')} />

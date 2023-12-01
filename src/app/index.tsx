@@ -6,38 +6,74 @@ import { IFormData } from '../types';
 import './app.scss';
 
 export const App = () => {
-  const data = useSelector((state: RootState) => state.dataForm.currentData);
+  const { currentData, previousData } = useSelector(
+    (state: RootState) => state.dataForm
+  );
 
   return (
     <div>
       <h3>Your data:</h3>
-      {data ? <View data={data} /> : <div>No information</div>}
+      {currentData ? (
+        <View currentData={currentData} previousData={previousData} />
+      ) : (
+        <div>No information</div>
+      )}
     </div>
   );
 };
 
-const View: React.FC<{ data: IFormData }> = ({ data }) => {
+const View: React.FC<{
+  currentData: IFormData;
+  previousData: IFormData | undefined;
+}> = ({ currentData, previousData }) => {
   return (
     <div className="data">
-      <div className="data__item">
+      <div
+        className={`data__item ${
+          previousData && currentData.name !== previousData.name ? 'active' : ''
+        }`}
+      >
         <span>Name:</span>
-        {data.name}
+        {currentData.name}
       </div>
-      <div className="data__item">
+      <div
+        className={`data__item ${
+          previousData && currentData.age !== previousData.age ? 'active' : ''
+        }`}
+      >
         <span>Age:</span>
-        {data.age}
+        {currentData.age}
       </div>
-      <div className="data__item">
+      <div
+        className={`data__item ${
+          previousData && currentData.email !== previousData.email
+            ? 'active'
+            : ''
+        }`}
+      >
         <span>Email:</span>
-        {data.email}
+        {currentData.email}
       </div>
-      <div className="data__item">
+      <div
+        className={`data__item ${
+          previousData && currentData.gender !== previousData.gender
+            ? 'active'
+            : ''
+        }`}
+      >
         <span>Gender:</span>
-        {data.gender}
+        {currentData.gender}
       </div>
-      <div className="data__item">
+      <div
+        className={`data__item ${
+          previousData &&
+          currentData.firstPassword !== previousData.firstPassword
+            ? 'active'
+            : ''
+        }`}
+      >
         <span>Password:</span>
-        {data.firstPassword}
+        {currentData.firstPassword}
       </div>
     </div>
   );
