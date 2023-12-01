@@ -1,21 +1,26 @@
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
+import { addData } from '../store/data-form-slice';
+import { useNavigate } from 'react-router-dom';
+import { IFormData } from '../types';
+
 const schema = yup.object().shape({
-  name: yup.string().matches(/^[A-Z]/, 'First letter must be UpperCase'),
-  age: yup.number().positive('Age must be positive'),
-  email: yup.string().email('Please, enter a correct email'),
-  password_first: yup
+  name: yup
     .string()
-    .matches(
-      /[!"#$%&\'()*+,-./:;<=>?@[\]^_`{|}~]+/,
-      'Password must have a special character'
-    )
-    .matches(/[A-Z]+/, 'Password must have one uppercased letter')
-    .matches(/[a-z]+/, 'Password must have one lowered letter')
-    .matches(/[0-9]+/, 'Password must have one number'),
-  password_second: yup
+    .matches(/^[A-Z]/, 'First letter must be UpperCase')
+    .required('This field is required'),
+  age: yup
+    .number()
+    .positive('Age must be positive')
+    .required('This field is required'),
+  email: yup
+    .string()
+    .email('Please, enter a correct email')
+    .required('This field is required'),
+  firstPassword: yup
     .string()
     .matches(
       /[!"#$%&\'()*+,-./:;<=>?@[\]^_`{|}~]+/,
@@ -24,20 +29,44 @@ const schema = yup.object().shape({
     .matches(/[A-Z]+/, 'Password must have one uppercased letter')
     .matches(/[a-z]+/, 'Password must have one lowered letter')
     .matches(/[0-9]+/, 'Password must have one number')
-    .oneOf([yup.ref('password_first')], 'Passwords must match'),
-  gender: yup.string(),
-  accept: yup.boolean().required('Accept is required'),
-  picture: yup.date(),
+    .required('This field is required'),
+  secondPassword: yup
+    .string()
+    .matches(
+      /[!"#$%&\'()*+,-./:;<=>?@[\]^_`{|}~]+/,
+      'Password must have a special character'
+    )
+    .matches(/[A-Z]+/, 'Password must have one uppercased letter')
+    .matches(/[a-z]+/, 'Password must have one lowered letter')
+    .matches(/[0-9]+/, 'Password must have one number')
+    .oneOf([yup.ref('firstPassword')], 'Passwords must match')
+    .required('This field is required'),
+  gender: yup.string().required('This field is required'),
+  accept: yup.boolean().required('This field is required'),
+  image: yup.string().required('This field is required'),
 });
 
 export const ReactHookForm = () => {
-  const { register, handleSubmit } = useForm({
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<IFormData>({
     mode: 'onChange',
     resolver: yupResolver(schema),
   });
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
+  const onSubmit: SubmitHandler<IFormData> = (data) => {
+    console.log('>>>>SUBMIT>', data);
+    dispatch(addData(data));
+    navigate('/');
+  };
 
   return (
-    <form onSubmit={handleSubmit(console.log)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div>
         <label htmlFor="name">Name:</label>
         <input
@@ -46,6 +75,7 @@ export const ReactHookForm = () => {
           placeholder="Enter your name"
           {...register('name')}
         />
+        {errors.name && <div>{errors.name.message}</div>}
       </div>
       <div>
         <label htmlFor="age">Age:</label>
@@ -55,6 +85,7 @@ export const ReactHookForm = () => {
           placeholder="Enter your age"
           {...register('age')}
         />
+        {errors.age && <div>{errors.age.message}</div>}
       </div>
       <div>
         <label htmlFor="email">Email:</label>
@@ -64,6 +95,7 @@ export const ReactHookForm = () => {
           placeholder="Enter your email"
           {...register('email')}
         />
+        {errors.email && <div>{errors.email.message}</div>}
       </div>
       <div>
         <label htmlFor="password_first">Password:</label>
@@ -71,8 +103,9 @@ export const ReactHookForm = () => {
           type="password"
           id="password_first"
           placeholder="Enter your password"
-          {...register('password_first')}
+          {...register('firstPassword')}
         />
+        {errors.firstPassword && <div>{errors.firstPassword.message}</div>}
       </div>
       <div>
         <label htmlFor="password_second">Repeat your password:</label>
@@ -80,13 +113,25 @@ export const ReactHookForm = () => {
           type="password"
           id="password_second"
           placeholder="Enter your password again"
-          {...register('password_second')}
+          {...register('secondPassword')}
         />
+        {errors.secondPassword && <div>{errors.secondPassword.message}</div>}
       </div>
       <div>
-        <input type="radio" checked id="male" {...register('gender')} />
+        <input
+          type="radio"
+          checked
+          value="male"
+          id="male"
+          {...register('gender')}
+        />
         <label htmlFor="male">Male</label>
-        <input type="radio" id="female" {...register('gender')} />
+        <input
+          type="radio"
+          id="female"
+          value="female"
+          {...register('gender')}
+        />
         <label htmlFor="female">Female</label>
       </div>
       <div>
@@ -94,9 +139,10 @@ export const ReactHookForm = () => {
         <label htmlFor="accept">Accept</label>
       </div>
       <div>
-        <label htmlFor="picture">Add your picture</label>
-        <input type="file" id="picture" {...register('picture')} />
+        <label htmlFor="image">Add your picture</label>
+        <input type="file" id="image" {...register('image')} />
       </div>
+      <button type="submit">Next</button>
     </form>
   );
 };
