@@ -1,0 +1,45 @@
+.form {
+  width: 50%;
+
+  button {
+    margin-top: 20px;
+  }
+}
+
+.text-field {
+  display: flex;
+  margin-top: 20px;
+  align-items: center;
+
+  label {
+    display: block;
+    width: 150px;
+  }
+
+  input {
+    display: block;
+    padding: 5px;
+  }
+}
+
+.radio-group {
+  display: flex;
+  margin-top: 20px;
+
+  &__title {
+    width: 150px;
+  }
+}
+
+.checkbox {
+  margin-top: 20px;
+}
+
+.error {
+  color: red;
+  margin-left: 150px;
+
+  &.accept {
+    margin: 0;
+  }
+}

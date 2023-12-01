@@ -1,6 +1,9 @@
 import { App } from './app';
 import { Layout } from './components/layout';
-import { FormWithUncontolledComponents, ReactHookForm } from './pages';
+import {
+  FormWithUncontolledComponents,
+  ReactHookForm,
+} from './components/forms';
 
 export const routes = [
   {

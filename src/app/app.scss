@@ -1,0 +1,14 @@
+.data {
+  width: 50%;
+  border-radius: 5%;
+  box-shadow: 0 5px 5px #808080;
+
+  &__item {
+    display: flex;
+    padding: 10px;
+    span {
+      display: block;
+      width: 90px;
+    }
+  }
+}
