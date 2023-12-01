@@ -60,7 +60,6 @@ export const ReactHookForm = () => {
   const dispatch = useDispatch();
 
   const onSubmit: SubmitHandler<IFormData> = (data) => {
-    console.log('>>>>SUBMIT>', data);
     dispatch(addData(data));
     navigate('/');
   };

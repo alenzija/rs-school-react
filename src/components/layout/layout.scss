@@ -1,0 +1,26 @@
+.container {
+  max-width: 1440px;
+  margin: auto;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  width: 100%;
+  margin-bottom: 20px;
+  div {
+    margin: 10px;
+
+    a {
+      color: #000000;
+
+      &:hover {
+        color: #808080;
+      }
+
+      &.active {
+        color: #232397;
+      }
+    }
+  }
+}
