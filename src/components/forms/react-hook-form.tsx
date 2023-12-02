@@ -10,7 +10,6 @@ import { RootState } from '../../store/store';
 
 import './form.scss';
 import { AutocompliteInput } from './autocomplete-input';
-import { COUNTRIES } from '../../consts';
 
 export const ReactHookForm = () => {
   const formData = useSelector(
@@ -19,6 +18,7 @@ export const ReactHookForm = () => {
   const {
     register,
     setValue,
+    watch,
     formState: { errors },
     handleSubmit,
   } = useForm<IFormData>({
@@ -26,6 +26,7 @@ export const ReactHookForm = () => {
     resolver: yupResolver(schema),
     defaultValues: { ...formData },
   });
+  const countries = useSelector((state: RootState) => state.countries.values);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -93,11 +94,13 @@ export const ReactHookForm = () => {
       <AutocompliteInput
         id="country"
         label="Country:"
-        values={COUNTRIES}
+        values={countries}
         className="text-field"
         register={register}
         setValue={setValue}
+        watch={watch}
       />
+      {errors.country && <div className="error">{errors.country.message}</div>}
       <div className="radio-group">
         <div className="radio-group__title">Gender:</div>
         <div>

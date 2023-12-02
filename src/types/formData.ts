@@ -5,7 +5,7 @@ export interface IFormData {
   firstPassword: string,
   secondPassword: string,
   gender: string,
-  country?: string,
+  country: string,
   accept?: boolean,
   image?: string,
 }

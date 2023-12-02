@@ -36,7 +36,7 @@ export const schema = yup.object().shape({
     .matches(/[0-9]+/, 'Password must have one number')
     .oneOf([yup.ref('firstPassword')], 'Passwords must match'),
   gender: yup.string().required('This field is required'),
-  country: yup.string(),
+  country: yup.string().required('This field is required'),
   accept: yup.boolean().oneOf([true], 'Accept is required'),
   image: yup.string(),
 });

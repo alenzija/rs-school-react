@@ -11,9 +11,15 @@ const countriesSlice = createSlice({
       state.values.push(action.payload);
       state.values.sort();
     },
+    filterCountries(state, action: {
+      payload: string;
+      type: string;
+    }) {
+      state.values = [...COUNTRIES.filter((item) => item.toLocaleLowerCase().includes(action.payload.trim().toLowerCase()))]
+    }
   },
 });
 
-export const { addCountry } = countriesSlice.actions;
+export const { addCountry, filterCountries } = countriesSlice.actions;
 
 export const countriesReducer = countriesSlice.reducer;
