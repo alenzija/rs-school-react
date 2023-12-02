@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { dataFormReducer } from './data-form-slice'
+import { countriesReducer } from './countries-slice'
 
 
 export const store = configureStore({
   reducer: { 
-    dataForm: dataFormReducer
+    dataForm: dataFormReducer,
+    countries: countriesReducer,
   },
 })
 

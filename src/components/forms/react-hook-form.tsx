@@ -9,6 +9,8 @@ import { IFormData } from '../../types';
 import { RootState } from '../../store/store';
 
 import './form.scss';
+import { AutocompliteInput } from './autocomplete-input';
+import { COUNTRIES } from '../../consts';
 
 export const ReactHookForm = () => {
   const formData = useSelector(
@@ -16,6 +18,7 @@ export const ReactHookForm = () => {
   );
   const {
     register,
+    setValue,
     formState: { errors },
     handleSubmit,
   } = useForm<IFormData>({
@@ -87,6 +90,14 @@ export const ReactHookForm = () => {
       {errors.secondPassword && (
         <div className="error">{errors.secondPassword.message}</div>
       )}
+      <AutocompliteInput
+        id="country"
+        label="Country:"
+        values={COUNTRIES}
+        className="text-field"
+        register={register}
+        setValue={setValue}
+      />
       <div className="radio-group">
         <div className="radio-group__title">Gender:</div>
         <div>

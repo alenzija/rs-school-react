@@ -7,7 +7,7 @@ const initialState: {previousData: IFormData | undefined; currentData: IFormData
 }
 
 const dataFormSlice = createSlice({
-  name: 'search',
+  name: 'dataFrom',
   initialState,
   reducers: {
     addData(state, action) {
