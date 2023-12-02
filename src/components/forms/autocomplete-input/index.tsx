@@ -5,11 +5,10 @@ import {
   UseFormWatch,
 } from 'react-hook-form/dist/types';
 import { IFormData } from '../../../types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { filterCountries } from '../../../store/countries-slice';
 
 import './autocomplete-input.scss';
-import { RootState } from '../../../store/store';
 
 type AutocompliteInputProps = {
   id: keyof IFormData;
@@ -33,15 +32,23 @@ export const AutocompliteInput: React.FC<AutocompliteInputProps> = ({
   const [visibilityMenu, setVisibilityMenu] = useState(false);
 
   const dispatch = useDispatch();
-  const countries = useSelector((state: RootState) => state.countries.values);
+  // const countries = useSelector((state: RootState) => state.countries.values);
 
   const textField = register(id);
 
+  // useEffect(() => {
+  //   if (countries.length === 1 && watch(id) === countries[0]) {
+  //     hideMenu();
+  //   }
+  // }, [id, watch, countries]);
+
   useEffect(() => {
-    if (countries.length === 1 && watch(id) === countries[0]) {
-      hideMenu();
-    }
-  }, [id, watch, countries]);
+    document.addEventListener('keyup', (e) => {
+      if (e.code === 'Enter') {
+        hideMenu();
+      }
+    });
+  }, []);
 
   const showMenu = () => {
     setVisibilityMenu(true);
@@ -64,6 +71,7 @@ export const AutocompliteInput: React.FC<AutocompliteInputProps> = ({
           }}
           id={id}
           type="text"
+          placeholder="Choose your country"
         />
         <div
           className="menu"

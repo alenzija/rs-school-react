@@ -12,6 +12,8 @@
     margin: 10px;
 
     a {
+      display: block;
+      padding: 5px;
       color: #000000;
 
       &:hover {
@@ -20,6 +22,8 @@
 
       &.active {
         color: #232397;
+        border-radius: 3px;
+        box-shadow: 2px -1px 5px;
       }
     }
   }

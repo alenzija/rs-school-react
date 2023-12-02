@@ -14,9 +14,12 @@ const dataFormSlice = createSlice({
       state.previousData = state.currentData;
       state.currentData = action.payload;
     },
+    updateData(state) {
+      state.previousData = state.currentData;
+    }
   },
 });
 
-export const { addData } = dataFormSlice.actions;
+export const { addData, updateData } = dataFormSlice.actions;
 
 export const dataFormReducer = dataFormSlice.reducer;

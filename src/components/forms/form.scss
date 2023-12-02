@@ -1,8 +1,12 @@
 .form {
-  width: 50%;
+  width: 70%;
 
   button {
-    margin-top: 20px;
+    display: block;
+    width: 100px;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: inherit;
   }
 }
 
@@ -13,12 +17,15 @@
 
   label {
     display: block;
-    width: 150px;
+    width: 200px;
+    cursor: pointer;
   }
 
   input {
     display: block;
+    width: 200px;
     padding: 5px;
+    font-family: inherit;
   }
 }
 
@@ -29,10 +36,18 @@
   &__title {
     width: 150px;
   }
+
+  label {
+    cursor: pointer;
+  }
 }
 
 .checkbox {
   margin-top: 20px;
+
+  label {
+    cursor: pointer;
+  }
 }
 
 .error {

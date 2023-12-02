@@ -86,7 +86,13 @@ const View: React.FC<{
         {currentData.firstPassword}
       </div>
       {currentData.imageBase64 && (
-        <div>
+        <div
+          className={`data__item ${
+            previousData && currentData.imageBase64 !== previousData.imageBase64
+              ? 'active'
+              : ''
+          }`}
+        >
           Your picture: <img width="200px" src={currentData.imageBase64} />
         </div>
       )}
