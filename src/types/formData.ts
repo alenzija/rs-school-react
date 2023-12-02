@@ -7,5 +7,7 @@ export interface IFormData {
   gender: string,
   country: string,
   accept?: boolean,
-  image?: string,
+  image?: FileList,
+  imageBase64?: string,
+  imageName?: string,
 }

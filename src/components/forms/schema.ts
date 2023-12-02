@@ -38,5 +38,5 @@ export const schema = yup.object().shape({
   gender: yup.string().required('This field is required'),
   country: yup.string().required('This field is required'),
   accept: yup.boolean().oneOf([true], 'Accept is required'),
-  image: yup.string(),
+  image: yup.mixed<FileList>()
 });

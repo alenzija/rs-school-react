@@ -10,6 +10,7 @@ import { RootState } from '../../store/store';
 
 import './form.scss';
 import { AutocompliteInput } from './autocomplete-input';
+import { convertBase64 } from '../../utils';
 
 export const ReactHookForm = () => {
   const formData = useSelector(
@@ -30,7 +31,13 @@ export const ReactHookForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const onSubmit: SubmitHandler<IFormData> = (data) => {
+  const onSubmit: SubmitHandler<IFormData> = async (data) => {
+    const images = data.image;
+    const imageBase64 =
+      images && images.length > 0 ? await convertBase64(images[0]) : undefined;
+    data.imageBase64 = imageBase64;
+    data.imageName = images && images.length > 0 ? images[0].name : undefined;
+    data.image = undefined;
     dispatch(addData(data));
     navigate('/');
   };
@@ -127,8 +134,19 @@ export const ReactHookForm = () => {
       {errors.gender && <div className="error">{errors.gender.message}</div>}
       <div className="text-field">
         <label htmlFor="image">Add your picture:</label>
-        <input type="file" id="image" {...register('image')} />
+        <input
+          type="file"
+          id="image"
+          accept=".jpg, .jpeg, .png"
+          {...register('image')}
+        />
       </div>
+      {formData?.imageName && (
+        <div>
+          <span>Your picture: </span>
+          {formData?.imageName}
+        </div>
+      )}
       <div className="checkbox">
         <input type="checkbox" id="accept" {...register('accept')} />
         <label htmlFor="accept">Accept</label>

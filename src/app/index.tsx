@@ -66,6 +66,16 @@ const View: React.FC<{
       </div>
       <div
         className={`data__item ${
+          previousData && currentData.country !== previousData.country
+            ? 'active'
+            : ''
+        }`}
+      >
+        <span>Country:</span>
+        {currentData.country}
+      </div>
+      <div
+        className={`data__item ${
           previousData &&
           currentData.firstPassword !== previousData.firstPassword
             ? 'active'
@@ -75,6 +85,11 @@ const View: React.FC<{
         <span>Password:</span>
         {currentData.firstPassword}
       </div>
+      {currentData.imageBase64 && (
+        <div>
+          Your picture: <img width="200px" src={currentData.imageBase64} />
+        </div>
+      )}
     </div>
   );
 };
