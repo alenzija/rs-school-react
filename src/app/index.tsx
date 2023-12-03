@@ -12,7 +12,7 @@ export const App = () => {
   );
 
   return (
-    <div>
+    <div style={{ padding: '10px' }}>
       <h3>Your data:</h3>
       {currentData ? (
         <View currentData={currentData} previousData={previousData} />
@@ -39,7 +39,7 @@ const View: React.FC<{
       </div>
       <div
         className={`data__item ${
-          previousData && currentData.age !== previousData.age ? 'active' : ''
+          previousData && +currentData.age !== +previousData.age ? 'active' : ''
         }`}
       >
         <span>Age:</span>

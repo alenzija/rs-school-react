@@ -27,6 +27,29 @@ type ErrorsType = {
   accept: string;
 };
 
+type TargetSubmit = {
+  name: { value: string };
+  age: { value: number };
+  email: { value: string };
+  firstPassword: { value: string };
+  secondPassword: { value: string };
+  country: { value: string };
+  gender: { value: string };
+  image: { files: FileList };
+  accept: { checked: boolean };
+};
+
+const emtyErrors = {
+  name: '',
+  age: '',
+  email: '',
+  firstPassword: '',
+  secondPassword: '',
+  country: '',
+  gender: '',
+  accept: '',
+};
+
 export const FormWithUncontolledComponents = () => {
   const formData = useSelector(
     (state: RootState) => state.dataForm.currentData
@@ -36,44 +59,16 @@ export const FormWithUncontolledComponents = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [errors, setErrors] = useState<ErrorsType>({
-    name: '',
-    age: '',
-    email: '',
-    firstPassword: '',
-    secondPassword: '',
-    country: '',
-    gender: '',
-    accept: '',
-  });
+  const [errors, setErrors] = useState<ErrorsType>(emtyErrors);
 
   const clearErrors = () => {
-    setErrors({
-      name: '',
-      age: '',
-      email: '',
-      firstPassword: '',
-      secondPassword: '',
-      country: '',
-      gender: '',
-      accept: '',
-    });
+    setErrors(emtyErrors);
   };
 
   const onSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    const target = e.target as typeof e.target & {
-      name: { value: string };
-      age: { value: number };
-      email: { value: string };
-      firstPassword: { value: string };
-      secondPassword: { value: string };
-      country: { value: string };
-      gender: { value: string };
-      image: { files: FileList };
-      accept: { checked: boolean };
-    };
+    const target = e.target as typeof e.target & TargetSubmit;
 
     const data: IFormData = {
       name: target.name.value,

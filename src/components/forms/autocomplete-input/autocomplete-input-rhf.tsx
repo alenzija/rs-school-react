@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import {
   UseFormRegister,
@@ -7,8 +6,6 @@ import {
   UseFormWatch,
 } from 'react-hook-form/dist/types';
 import { IFormData } from '../../../types';
-
-import { filterCountries } from '../../../store/countries-slice';
 
 import './autocomplete-input.scss';
 
@@ -32,17 +29,20 @@ export const AutocompliteInputRHF: React.FC<AutocompliteInputProps> = ({
   watch,
 }) => {
   const [visibilityMenu, setVisibilityMenu] = useState(false);
-
-  const dispatch = useDispatch();
+  const [availableValues, setAvailableValues] = useState(values);
 
   const textField = register(id);
 
   useEffect(() => {
-    document.addEventListener('keyup', (e) => {
+    const keyupHandler = (e: KeyboardEvent) => {
       if (e.code === 'Enter') {
         hideMenu();
       }
-    });
+    };
+    document.addEventListener('keyup', keyupHandler);
+    return () => {
+      document.removeEventListener('keyup', keyupHandler);
+    };
   }, []);
 
   const showMenu = () => {
@@ -62,7 +62,13 @@ export const AutocompliteInputRHF: React.FC<AutocompliteInputProps> = ({
           onFocus={showMenu}
           onChange={(e) => {
             textField.onChange(e);
-            dispatch(filterCountries(watch(id) as string));
+            setAvailableValues(
+              values.filter((item) =>
+                item
+                  .toLocaleLowerCase()
+                  .includes((watch(id) as string).trim().toLowerCase())
+              )
+            );
           }}
           id={id}
           type="text"
@@ -74,7 +80,7 @@ export const AutocompliteInputRHF: React.FC<AutocompliteInputProps> = ({
             display: `${visibilityMenu ? 'block' : 'none'}`,
           }}
         >
-          {values.map((item, i) => (
+          {availableValues.map((item, i) => (
             <div
               className="menu__item"
               onClick={() => {

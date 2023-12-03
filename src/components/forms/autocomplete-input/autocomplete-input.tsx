@@ -1,7 +1,4 @@
-import { useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
-
-import { filterCountries } from '../../../store/countries-slice';
+import { useEffect, useRef, useState } from 'react';
 
 import { IFormData } from '../../../types';
 
@@ -25,10 +22,9 @@ export const AutocompliteInput: React.FC<AutocompliteInputProps> = ({
   defaultValue,
 }) => {
   const [visibilityMenu, setVisibilityMenu] = useState(false);
+  const [availableValues, setAvailableValues] = useState(values);
 
   const ref = useRef<HTMLInputElement>(null);
-
-  const dispatch = useDispatch();
 
   const showMenu = () => {
     setVisibilityMenu(true);
@@ -37,6 +33,18 @@ export const AutocompliteInput: React.FC<AutocompliteInputProps> = ({
   const hideMenu = () => {
     setVisibilityMenu(false);
   };
+
+  useEffect(() => {
+    const keyupHandler = (e: KeyboardEvent) => {
+      if (e.code === 'Enter') {
+        hideMenu();
+      }
+    };
+    document.addEventListener('keyup', keyupHandler);
+    return () => {
+      document.removeEventListener('keyup', keyupHandler);
+    };
+  }, []);
 
   return (
     <div className={className}>
@@ -50,7 +58,11 @@ export const AutocompliteInput: React.FC<AutocompliteInputProps> = ({
             if (!value) {
               return;
             }
-            dispatch(filterCountries(value));
+            setAvailableValues(
+              values.filter((item) =>
+                item.toLowerCase().includes(value.trim().toLowerCase())
+              )
+            );
           }}
           id={id}
           name={name}
@@ -64,7 +76,7 @@ export const AutocompliteInput: React.FC<AutocompliteInputProps> = ({
             display: `${visibilityMenu ? 'block' : 'none'}`,
           }}
         >
-          {values.map((item, i) => (
+          {availableValues.map((item, i) => (
             <div
               className="menu__item"
               onClick={() => {

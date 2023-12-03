@@ -1,5 +1,6 @@
 .form {
   width: 70%;
+  padding: 10px;
 
   button {
     display: block;
@@ -52,7 +53,7 @@
 
 .error {
   color: red;
-  margin-left: 150px;
+  margin-left: 200px;
 
   &.accept {
     margin: 0;
