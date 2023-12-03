@@ -1,17 +1,21 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { schema } from './schema';
-import { addData, updateData } from '../../store/data-form-slice';
 
-import { IFormData } from '../../types';
+import { addData, updateData } from '../../store/data-form-slice';
 import { RootState } from '../../store/store';
 
-import './form.scss';
 import { AutocompliteInputRHF } from './autocomplete-input/';
+
 import { convertBase64 } from '../../utils';
-import { useEffect } from 'react';
+
+import { IFormData } from '../../types';
+
+import { schema } from './schema';
+
+import './form.scss';
 
 export const ReactHookForm = () => {
   const formData = useSelector(

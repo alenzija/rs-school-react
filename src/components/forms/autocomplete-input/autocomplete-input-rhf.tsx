@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+
 import {
   UseFormRegister,
   UseFormSetValue,
   UseFormWatch,
 } from 'react-hook-form/dist/types';
 import { IFormData } from '../../../types';
-import { useDispatch } from 'react-redux';
+
 import { filterCountries } from '../../../store/countries-slice';
 
 import './autocomplete-input.scss';

@@ -1,16 +1,20 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { schema } from './schema';
-import { addData, updateData } from '../../store/data-form-slice';
+import { ValidationError } from 'yup';
 
-import { IFormData } from '../../types';
+import { addData, updateData } from '../../store/data-form-slice';
 import { RootState } from '../../store/store';
 
-import './form.scss';
-import { convertBase64 } from '../../utils';
-import { useEffect, useState } from 'react';
-import { ValidationError } from 'yup';
 import { AutocompliteInput } from './autocomplete-input';
+
+import { convertBase64 } from '../../utils';
+
+import { IFormData } from '../../types';
+
+import { schema } from './schema';
+
+import './form.scss';
 
 type ErrorsType = {
   name: string;
@@ -173,16 +177,6 @@ export const FormWithUncontolledComponents = () => {
       {errors.secondPassword && (
         <div className="error">{errors.secondPassword}</div>
       )}
-      {/* <div className="text-field">
-        <label htmlFor="country">your country:</label>
-        <input
-          name="country"
-          type="text"
-          id="country"
-          placeholder="Enter your country"
-          defaultValue={formData?.country}
-        />
-      </div> */}
       <AutocompliteInput
         name="country"
         id="country"
