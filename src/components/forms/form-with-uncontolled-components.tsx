@@ -8,8 +8,9 @@ import { RootState } from '../../store/store';
 
 import './form.scss';
 import { convertBase64 } from '../../utils';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ValidationError } from 'yup';
+import { AutocompliteInput } from './autocomplete-input';
 
 type ErrorsType = {
   name: string;
@@ -27,11 +28,10 @@ export const FormWithUncontolledComponents = () => {
     (state: RootState) => state.dataForm.currentData
   );
 
-  // const countries = useSelector((state: RootState) => state.countries.values);
+  const countries = useSelector((state: RootState) => state.countries.values);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const formRef = useRef<HTMLFormElement>(null);
   const [errors, setErrors] = useState<ErrorsType>({
     name: '',
     age: '',
@@ -113,7 +113,7 @@ export const FormWithUncontolledComponents = () => {
   }, [dispatch]);
 
   return (
-    <form ref={formRef} className="form" onSubmit={onSubmit}>
+    <form className="form" onSubmit={onSubmit}>
       <div className="text-field">
         <label htmlFor="name">Name:</label>
         <input
@@ -173,7 +173,7 @@ export const FormWithUncontolledComponents = () => {
       {errors.secondPassword && (
         <div className="error">{errors.secondPassword}</div>
       )}
-      <div className="text-field">
+      {/* <div className="text-field">
         <label htmlFor="country">your country:</label>
         <input
           name="country"
@@ -182,16 +182,15 @@ export const FormWithUncontolledComponents = () => {
           placeholder="Enter your country"
           defaultValue={formData?.country}
         />
-      </div>
-      {/* <AutocompliteInput
+      </div> */}
+      <AutocompliteInput
+        name="country"
         id="country"
         label="Country:"
         values={countries}
         className="text-field"
-        register={register}
-        setValue={setValue}
-        watch={watch}
-      /> */}
+        defaultValue={formData?.country}
+      />
       {errors.country && <div className="error">{errors.country}</div>}
       <div className="radio-group">
         <div className="radio-group__title">Gender:</div>

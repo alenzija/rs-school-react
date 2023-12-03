@@ -9,7 +9,7 @@ import { IFormData } from '../../types';
 import { RootState } from '../../store/store';
 
 import './form.scss';
-import { AutocompliteInput } from './autocomplete-input';
+import { AutocompliteInputRHF } from './autocomplete-input/';
 import { convertBase64 } from '../../utils';
 import { useEffect } from 'react';
 
@@ -105,7 +105,7 @@ export const ReactHookForm = () => {
       {errors.secondPassword && (
         <div className="error">{errors.secondPassword.message}</div>
       )}
-      <AutocompliteInput
+      <AutocompliteInputRHF
         id="country"
         label="Country:"
         values={countries}
