@@ -1,0 +1,33 @@
+.data {
+  width: 50%;
+  padding: 10px;
+  border-radius: 5%;
+  box-shadow: 0 5px 5px #808080;
+
+  &__item {
+    display: flex;
+    padding: 10px;
+    span {
+      display: block;
+      width: 90px;
+    }
+
+    &.active {
+      animation: ease-in 1.5s 1 background-animate;
+    }
+  }
+}
+
+@keyframes background-animate {
+  0% {
+    background-color: transparent;
+  }
+
+  50% {
+    background-color: #3bff3b;
+  }
+
+  100% {
+    background-color: transparent;
+  }
+}

@@ -1,0 +1,61 @@
+.form {
+  width: 70%;
+  padding: 10px;
+
+  button {
+    display: block;
+    width: 100px;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: inherit;
+  }
+}
+
+.text-field {
+  display: flex;
+  margin-top: 20px;
+  align-items: center;
+
+  label {
+    display: block;
+    width: 200px;
+    cursor: pointer;
+  }
+
+  input {
+    display: block;
+    width: 200px;
+    padding: 5px;
+    font-family: inherit;
+  }
+}
+
+.radio-group {
+  display: flex;
+  margin-top: 20px;
+
+  &__title {
+    width: 150px;
+  }
+
+  label {
+    cursor: pointer;
+  }
+}
+
+.checkbox {
+  margin-top: 20px;
+
+  label {
+    cursor: pointer;
+  }
+}
+
+.error {
+  color: red;
+  margin-left: 200px;
+
+  &.accept {
+    margin: 0;
+  }
+}
