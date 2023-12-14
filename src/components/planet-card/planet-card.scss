@@ -1,0 +1,15 @@
+.planet-card {
+  width: 250px;
+  height: 300px;
+  padding: 10px;
+  background-color: #80808014;
+  border-radius: 2px;
+  box-shadow: 2px 2px 2px grey;
+  transition: background-color 0.3s;
+  cursor: pointer;
+
+  &:hover,
+  &.active {
+    background-color: #8080806e;
+  }
+}
