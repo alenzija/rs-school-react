@@ -1,6 +1,7 @@
 import { Page404 } from './components/404';
 import { App } from './components/app';
 import { LeftSidePanel, getPlanetLoader } from './components/left-side-panel';
+import { Spinner } from './components/spinner';
 
 export const routes = [
   {
@@ -15,5 +16,9 @@ export const routes = [
         loader: getPlanetLoader,
       },
     ],
+  },
+  {
+    path: '/login',
+    element: <Spinner />,
   },
 ];
