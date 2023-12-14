@@ -1,0 +1,8 @@
+.container {
+  flex-basis: 70%;
+  flex-grow: 3;
+
+  .spinner {
+    width: inherit;
+  }
+}
